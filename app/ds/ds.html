@@ -1,0 +1,108 @@
+<div>
+    <form class="form-horizontal" role="form" ng-model-options="{ updateOn: 'blur' }">
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">DataSource</label>
+            <div class="col-sm-6">
+                <select id="inputName" class="form-control"
+                        ng-model="dsName"
+                        ng-model-options="{ updateOn: 'default' }"
+                        ng-options="key for key in dsNames"
+                        ng-change="loadDS()">
+                    <option value="">-- Select a DataSource--</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputEnabled" class="col-sm-2 control-label">Enabled</label>
+            <div class="col-sm-6">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="inputEnabled" ng-model="ds.enabled"
+                               ng-model-options="{ updateOn: 'default' }"
+                               ng-change="save('enabled')">
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputJndiName" class="col-sm-2 control-label">Jndi Name</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="inputJndiName" ng-model="ds['jndi-name']"
+                       ng-change="save('jndi-name')">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputDriver" class="col-sm-2 control-label">Driver</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="inputDriver" ng-model="ds['driver-name']"
+                       ng-change="save('driver-name')">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputConnectionUrl" class="col-sm-2 control-label">Connection URL</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="inputConnectionUrl"
+                       ng-model="ds['connection-url']"
+                       ng-change="save('connection-url')">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputUserName" class="col-sm-2 control-label">User Name</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="inputUserName" ng-model="ds['user-name']"
+                       ng-change="save('user-name')">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputPassword" class="col-sm-2 control-label">Password</label>
+            <div class="col-sm-6">
+                <input type="password" class="form-control" id="inputPassword" ng-model="ds.password"
+                       ng-change="save('password')">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-6">
+                <button class="btn btn-primary" id="buttonReload"
+                        ng-show="processState == 'reload-required'"
+                        ng-click="reload()">Reload</button>
+                <button class="btn btn-primary" id="buttonCreate"
+                        ng-hide="dsName"
+                        ng-click="open()">Create</button>
+                <button class="btn btn-primary" id="buttonDuplicate"
+                        ng-show="dsName"
+                        ng-click="duplicate()">Duplicate</button>
+                <button class="btn btn-primary" id="buttonRemove"
+                        ng-click="remove()">Remove</button>
+            </div>
+        </div>
+
+        <div class="col-sm-8">
+            <alert type="danger" close="closeAlert()" ng-show="error" >{{error}}</alert>
+        </div>
+
+    </form>
+</div>
+
+<script type="text/ng-template" id="ds-name.html">
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="inputDsName" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="inputDsName" ng-model="name">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">OK</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
