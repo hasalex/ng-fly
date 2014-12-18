@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('flyNg.driver', ['ngRoute'])
+    .module('flyNg.driver', ['ngRoute', 'services'])
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
@@ -11,40 +11,34 @@ angular
             });
     }])
 
-    .controller('DriverController', ['$http', '$scope', '$modal', function ($http, $scope, $modal) {
+    .controller('DriverController', ['$http', '$scope', '$modal', 'management', function ($http, $scope, $modal, management) {
 
-        $scope.driverName = null;
+        $scope.name = null;
         $scope.driver = {};
 
         list();
 
         function list() {
-
-            $http({
-                method: 'GET',
-                url: '/management/subsystem/datasources/'
-
-            }).
-            success(function (data) {
-                if (data['jdbc-driver']) {
-                    $scope.driverNames = Object.keys(data['jdbc-driver']);
+            management.list('/management/subsystem/datasources/', 'jdbc-driver').then(
+                function(data) {
+                    $scope.names = data;
+                },
+                function(reason) {
+                    $scope.error = reason.error;
+                    if (reason.processState) {
+                        $scope.processState = reason.processState;
+                    }
                 }
-            }).
-            error(function (data) {
-                $scope.error = data["failure-description"];
-                if (data['response-headers']) {
-                    $scope.processState = data['response-headers']['process-state'];
-                }
-            });
+            );
         }
 
         $scope.load = function() {
 
-            if ($scope.driverName == null) {
+            if ($scope.name == null) {
                 $scope.driver = {};
             } else {
                 $http({
-                    method: 'GET', url: '/management/subsystem/datasources/jdbc-driver/' + $scope.driverName
+                    method: 'GET', url: '/management/subsystem/datasources/jdbc-driver/' + $scope.name
                 }).
                 success(function (data) {
                     $scope.driver = data;
@@ -59,7 +53,7 @@ angular
         }
 
         $scope.save = function(attr) {
-            if ($scope.driverName == null) {
+            if ($scope.name == null) {
                 return;
             }
 
@@ -68,7 +62,7 @@ angular
                  "operation": "write-attribute",
                  "operation-headers" : {"allow-resource-service-restart" : true }
             };
-            data.address[1]['jdbc-driver'] = $scope.driverName;
+            data.address[1]['jdbc-driver'] = $scope.name;
             data.name = attr;
             data.value = $scope.driver[attr];
 
@@ -115,8 +109,8 @@ angular
                 "operation-headers" : {"allow-resource-service-restart" : true }
             };
 
-            data.address[1]['jdbc-driver'] = $scope.driverName;
-            data['driver-name'] = $scope.driverName;
+            data.address[1]['jdbc-driver'] = $scope.name;
+            data['driver-name'] = $scope.name;
             data['driver-module-name'] = $scope.driver['driver-module-name'];
             data['driver-xa-datasource-class-name'] = $scope.driver['driver-xa-datasource-class-name'];
 
@@ -130,7 +124,7 @@ angular
                 $scope.load();
             }).
             error(function (data) {
-                $scope.driverName = null;
+                $scope.name = null;
                 $scope.error = data["failure-description"];
                 if (data['response-headers']) {
                     $scope.processState = data['response-headers']['process-state'];
@@ -139,7 +133,7 @@ angular
         }
 
         $scope.remove = function() {
-            if ($scope.driverName== null) {
+            if ($scope.name== null) {
                 $scope.driver = {};
                 return;
             }
@@ -150,7 +144,7 @@ angular
                 "operation-headers" : {"allow-resource-service-restart" : true }
             };
 
-            data.address[1]['jdbc-driver'] = $scope.driverName;
+            data.address[1]['jdbc-driver'] = $scope.name;
 
             $http({
                 method: 'POST',
@@ -158,12 +152,12 @@ angular
                 data: data
             }).
             success(function () {
-                $scope.driverName = null
+                $scope.name = null
                 list();
                 $scope.load();
             }).
             error(function (data) {
-                $scope.driverName = null;
+                $scope.name = null;
                 $scope.error = data["failure-description"];
                 if (data['response-headers']) {
                     $scope.processState = data['response-headers']['process-state'];
@@ -172,7 +166,7 @@ angular
         }
 
         $scope.duplicate = function() {
-            $scope.driverName = null;
+            $scope.name = null;
         }
 
         $scope.closeAlert = function() {
@@ -188,7 +182,7 @@ angular
 
             modalInstance.result.then(
             function (name) {
-                $scope.driverName = name;
+                $scope.name = name;
                 $scope.create();
             },
             function () {

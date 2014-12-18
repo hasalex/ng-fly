@@ -5,9 +5,9 @@
             <label class="col-sm-3 control-label">Driver</label>
             <div class="col-sm-6">
                 <select id="inputName" class="form-control"
-                        ng-model="driverName"
+                        ng-model="name"
                         ng-model-options="{ updateOn: 'default' }"
-                        ng-options="key for key in driverNames"
+                        ng-options="key for key in names"
                         ng-change="load()">
                     <option value="">-- Select a Driver--</option>
                 </select>
@@ -18,7 +18,7 @@
             <label for="inputDriverModuleName" class="col-sm-3 control-label">Module Name</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" id="inputDriverModuleName" ng-model="driver['driver-module-name']"
-                       ng-disabled="driverName"
+                       ng-disabled="name"
                        ng-change="save('driver-module-name')">
             </div>
         </div>
@@ -27,7 +27,7 @@
             <label for="inputModuleSlot" class="col-sm-3 control-label">Module Slot</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" id="inputModuleSlot" ng-model="driver['module-slot']"
-                       ng-disabled="driverName"
+                       ng-disabled="name"
                        ng-change="save('module-slot')">
             </div>
         </div>
@@ -36,7 +36,7 @@
             <label for="inputDatasourceClassName" class="col-sm-3 control-label">DataSource Class</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" id="inputDatasourceClassName" ng-model="driver['driver-datasource-class-name']"
-                       ng-disabled="driverName"
+                       ng-disabled="name"
                        ng-change="save('driver-datasource-class-name')">
             </div>
         </div>
@@ -45,7 +45,7 @@
             <label for="inputXaDatasourceClassName" class="col-sm-3 control-label">Xa DataSource Class</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" id="inputXaDatasourceClassName" ng-model="driver['driver-xa-datasource-class-name']"
-                       ng-disabled="driverName"
+                       ng-disabled="name"
                        ng-change="save('driver-xa-datasource-class-name')">
             </div>
         </div>
@@ -57,10 +57,10 @@
                         ng-show="processState == 'reload-required'"
                         ng-click="reload()">Reload</button>
                 <button class="btn btn-primary" id="buttonCreate"
-                        ng-hide="driverName"
+                        ng-hide="name"
                         ng-click="open()">Create</button>
                 <button class="btn btn-primary" id="buttonDuplicate"
-                        ng-show="driverName"
+                        ng-show="name"
                         ng-click="duplicate()">Duplicate</button>
                 <button class="btn btn-primary" id="buttonRemove"
                         ng-click="remove()">Remove</button>

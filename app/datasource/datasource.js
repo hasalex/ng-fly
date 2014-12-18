@@ -11,7 +11,7 @@ angular
             });
     }])
 
-    .controller('DataSourceController', ['$http', '$scope', '$modal', function ($http, $scope, $modal) {
+    .controller('DataSourceController', ['$http', '$scope', '$modal', 'management', function ($http, $scope, $modal, management) {
 
         $scope.ds = {};
         $scope.dsName = null;
@@ -20,22 +20,17 @@ angular
 
         function list() {
 
-            $http({
-                method: 'GET',
-                url: '/management/subsystem/datasources/'
-
-            }).
-            success(function (data) {
-                if (data['data-source']) {
-                    $scope.dsNames = Object.keys(data['data-source']);
+            management.list('/management/subsystem/datasources/', 'data-source').then(
+                function(data) {
+                    $scope.dsNames = data;
+                },
+                function(reason) {
+                    $scope.error = reason.error;
+                    if (reason.processState) {
+                        $scope.processState = reason.processState;
+                    }
                 }
-            }).
-            error(function (data) {
-                $scope.error = data["failure-description"];
-                if (data['response-headers']) {
-                    $scope.processState = data['response-headers']['process-state'];
-                }
-            });
+            );
         }
 
         $scope.load = function() {

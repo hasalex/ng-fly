@@ -5,6 +5,7 @@ angular.module('flyNg',
   [
     'ngRoute',
     'ui.bootstrap',
+    'services',
     'flyNg.ds',
     'flyNg.driver'
   ]
