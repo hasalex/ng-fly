@@ -11,7 +11,7 @@ angular
             });
     }])
 
-    .controller('DriverController', function ($http, $scope, $modal) {
+    .controller('DriverController', ['$http', '$scope', '$modal', function ($http, $scope, $modal) {
 
         $scope.driverName = null;
         $scope.driver = {};
@@ -25,12 +25,12 @@ angular
                 url: '/management/subsystem/datasources/'
 
             }).
-            success(function (data, status, headers, config) {
+            success(function (data) {
                 if (data['jdbc-driver']) {
                     $scope.driverNames = Object.keys(data['jdbc-driver']);
                 }
             }).
-            error(function (data, status, headers, config) {
+            error(function (data) {
                 $scope.error = data["failure-description"];
                 if (data['response-headers']) {
                     $scope.processState = data['response-headers']['process-state'];
@@ -46,10 +46,10 @@ angular
                 $http({
                     method: 'GET', url: '/management/subsystem/datasources/jdbc-driver/' + $scope.driverName
                 }).
-                success(function (data, status, headers, config) {
+                success(function (data) {
                     $scope.driver = data;
                 }).
-                error(function (data, status, headers, config) {
+                error(function (data) {
                     $scope.error = data["failure-description"];
                     if (data['response-headers']) {
                         $scope.processState = data['response-headers']['process-state'];
@@ -77,10 +77,10 @@ angular
                 url: '/management',
                 data: data
             }).
-            success(function (data, status, headers, config) {
+            success(function (data) {
                 $scope.processState = data['response-headers']['process-state'];
             }).
-            error(function (data, status, headers, config) {
+            error(function (data) {
                 $scope.error = data["failure-description"];
                 if (data['response-headers']) {
                     $scope.processState = data['response-headers']['process-state'];
@@ -96,10 +96,10 @@ angular
                 url: '/management',
                 data: data
             }).
-            success(function (data, status, headers, config) {
+            success(function () {
                 $scope.processState = false;
             }).
-            error(function (data, status, headers, config) {
+            error(function (data) {
                 $scope.error = data["failure-description"];
                 if (data['response-headers']) {
                     $scope.processState = data['response-headers']['process-state'];
@@ -125,11 +125,11 @@ angular
                 url: '/management',
                 data: data
             }).
-            success(function (data, status, headers, config) {
+            success(function () {
                 list();
                 $scope.load();
             }).
-            error(function (data, status, headers, config) {
+            error(function (data) {
                 $scope.driverName = null;
                 $scope.error = data["failure-description"];
                 if (data['response-headers']) {
@@ -157,12 +157,12 @@ angular
                 url: '/management',
                 data: data
             }).
-            success(function (data, status, headers, config) {
+            success(function () {
                 $scope.driverName = null
                 list();
                 $scope.load();
             }).
-            error(function (data, status, headers, config) {
+            error(function (data) {
                 $scope.driverName = null;
                 $scope.error = data["failure-description"];
                 if (data['response-headers']) {
@@ -178,8 +178,6 @@ angular
         $scope.closeAlert = function() {
             $scope.error = null;
         };
-
-        $scope.items = ['item1', 'item2', 'item3'];
 
         $scope.open = function () {
 
@@ -197,8 +195,8 @@ angular
 
             });
         };
-    })
-    .controller('DriverModalInstanceCtrl', function ($scope, $modalInstance) {
+    }])
+    .controller('DriverModalInstanceCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
         $scope.ok = function () {
             $modalInstance.close($scope.name);
         };
@@ -206,4 +204,4 @@ angular
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
-    });
+    }]);

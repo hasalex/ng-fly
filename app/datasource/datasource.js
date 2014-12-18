@@ -6,12 +6,12 @@ angular
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
             .when('/ds', {
-                templateUrl: 'ds/ds.html',
-                controller: 'Ds2Ctrl'
+                templateUrl: 'datasource/datasource.html',
+                controller: 'DataSourceController'
             });
     }])
 
-    .controller('Ds2Ctrl', function ($http, $scope, $modal) {
+    .controller('DataSourceController', ['$http', '$scope', '$modal', function ($http, $scope, $modal) {
 
         $scope.ds = {};
         $scope.dsName = null;
@@ -25,12 +25,12 @@ angular
                 url: '/management/subsystem/datasources/'
 
             }).
-            success(function (data, status, headers, config) {
+            success(function (data) {
                 if (data['data-source']) {
                     $scope.dsNames = Object.keys(data['data-source']);
                 }
             }).
-            error(function (data, status, headers, config) {
+            error(function (data) {
                 $scope.error = data["failure-description"];
                 if (data['response-headers']) {
                     $scope.processState = data['response-headers']['process-state'];
@@ -46,11 +46,11 @@ angular
                 $http({
                     method: 'GET', url: '/management/subsystem/datasources/data-source/' + $scope.dsName
                 }).
-                success(function (data, status, headers, config) {
+                success(function (data) {
                     $scope.ds = data;
                     $scope.ds.name = $scope.dsName;
                 }).
-                error(function (data, status, headers, config) {
+                error(function (data) {
                     $scope.error = data["failure-description"];
                     if (data['response-headers']) {
                         $scope.processState = data['response-headers']['process-state'];
@@ -78,10 +78,10 @@ angular
                 url: '/management',
                 data: data
             }).
-            success(function (data, status, headers, config) {
+            success(function (data) {
                 $scope.processState = data['response-headers']['process-state'];
             }).
-            error(function (data, status, headers, config) {
+            error(function (data) {
                 $scope.error = data["failure-description"];
                 if (data['response-headers']) {
                     $scope.processState = data['response-headers']['process-state'];
@@ -97,11 +97,11 @@ angular
                 url: '/management',
                 data: data
             }).
-            success(function (data, status, headers, config) {
+            success(function (data) {
                 console.log(data);
                 $scope.processState = false;
             }).
-            error(function (data, status, headers, config) {
+            error(function (data) {
                 $scope.error = data["failure-description"];
                 if (data['response-headers']) {
                     $scope.processState = data['response-headers']['process-state'];
@@ -130,11 +130,11 @@ angular
                 url: '/management',
                 data: data
             }).
-            success(function (data, status, headers, config) {
+            success(function () {
                 list();
                 $scope.load();
             }).
-            error(function (data, status, headers, config) {
+            error(function (data) {
                 $scope.dsName = null;
                 $scope.error = data["failure-description"];
                 if (data['response-headers']) {
@@ -162,12 +162,12 @@ angular
                 url: '/management',
                 data: data
             }).
-            success(function (data, status, headers, config) {
+            success(function () {
                 $scope.dsName = null
                 list();
                 $scope.load();
             }).
-            error(function (data, status, headers, config) {
+            error(function (data) {
                 $scope.dsName = null;
                 $scope.error = data["failure-description"];
                 if (data['response-headers']) {
@@ -183,8 +183,6 @@ angular
         $scope.closeAlert = function() {
             $scope.error = null;
         };
-
-        $scope.items = ['item1', 'item2', 'item3'];
 
         $scope.open = function () {
 
@@ -202,8 +200,8 @@ angular
 
             });
         };
-    })
-    .controller('ModalInstanceCtrl', function ($scope, $modalInstance) {
+    }])
+    .controller('ModalInstanceCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
         $scope.ok = function () {
             $modalInstance.close($scope.name);
         };
@@ -211,4 +209,4 @@ angular
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
-    });
+    }]);
