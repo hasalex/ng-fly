@@ -1,20 +1,20 @@
 'use strict';
 
 angular
-    .module('flyNg.ds', ['ngRoute'])
+    .module('flyNg.driver', ['ngRoute'])
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
-            .when('/ds', {
-                templateUrl: 'ds/ds.html',
-                controller: 'Ds2Ctrl'
+            .when('/driver', {
+                templateUrl: 'driver/driver.html',
+                controller: 'DriverController'
             });
     }])
 
-    .controller('Ds2Ctrl', function ($http, $scope, $modal) {
+    .controller('DriverController', function ($http, $scope, $modal) {
 
-        $scope.ds = {};
-        $scope.dsName = null;
+        $scope.driverName = null;
+        $scope.driver = {};
 
         list();
 
@@ -26,8 +26,8 @@ angular
 
             }).
             success(function (data, status, headers, config) {
-                if (data['data-source']) {
-                    $scope.dsNames = Object.keys(data['data-source']);
+                if (data['jdbc-driver']) {
+                    $scope.driverNames = Object.keys(data['jdbc-driver']);
                 }
             }).
             error(function (data, status, headers, config) {
@@ -40,15 +40,14 @@ angular
 
         $scope.load = function() {
 
-            if ($scope.dsName == null) {
-                $scope.ds = {};
+            if ($scope.driverName == null) {
+                $scope.driver = {};
             } else {
                 $http({
-                    method: 'GET', url: '/management/subsystem/datasources/data-source/' + $scope.dsName
+                    method: 'GET', url: '/management/subsystem/datasources/jdbc-driver/' + $scope.driverName
                 }).
                 success(function (data, status, headers, config) {
-                    $scope.ds = data;
-                    $scope.ds.name = $scope.dsName;
+                    $scope.driver = data;
                 }).
                 error(function (data, status, headers, config) {
                     $scope.error = data["failure-description"];
@@ -60,18 +59,18 @@ angular
         }
 
         $scope.save = function(attr) {
-            if ($scope.dsName == null) {
+            if ($scope.driverName == null) {
                 return;
             }
 
             var data = {
-                "address": [{"subsystem": "datasources"}, {"data-source": null}],
+                "address": [{"subsystem": "datasources"}, {"jdbc-driver": null}],
                  "operation": "write-attribute",
                  "operation-headers" : {"allow-resource-service-restart" : true }
             };
-            data.address[1]['data-source'] = $scope.dsName;
+            data.address[1]['jdbc-driver'] = $scope.driverName;
             data.name = attr;
-            data.value = $scope.ds[attr];
+            data.value = $scope.driver[attr];
 
             $http({
                 method: 'POST',
@@ -98,7 +97,6 @@ angular
                 data: data
             }).
             success(function (data, status, headers, config) {
-                console.log(data);
                 $scope.processState = false;
             }).
             error(function (data, status, headers, config) {
@@ -112,18 +110,15 @@ angular
 
         $scope.create = function() {
             var data = {
-                "address": [{"subsystem": "datasources"}, {"data-source": null}],
+                "address": [{"subsystem": "datasources"}, {"jdbc-driver": null}],
                 "operation": "add",
                 "operation-headers" : {"allow-resource-service-restart" : true }
             };
 
-            data.address[1]['data-source'] = $scope.dsName;
-            data['enabled'] = $scope.ds['enabled'];
-            data['jndi-name'] = $scope.ds['jndi-name'];
-            data['driver-name'] = $scope.ds['driver-name'];
-            data['connection-url'] = $scope.ds['connection-url'];
-            data['user-name'] = $scope.ds['user-name'];
-            data['password'] = $scope.ds['password'];
+            data.address[1]['jdbc-driver'] = $scope.driverName;
+            data['driver-name'] = $scope.driverName;
+            data['driver-module-name'] = $scope.driver['driver-module-name'];
+            data['driver-xa-datasource-class-name'] = $scope.driver['driver-xa-datasource-class-name'];
 
             $http({
                 method: 'POST',
@@ -135,7 +130,7 @@ angular
                 $scope.load();
             }).
             error(function (data, status, headers, config) {
-                $scope.dsName = null;
+                $scope.driverName = null;
                 $scope.error = data["failure-description"];
                 if (data['response-headers']) {
                     $scope.processState = data['response-headers']['process-state'];
@@ -144,18 +139,18 @@ angular
         }
 
         $scope.remove = function() {
-            if ($scope.dsName == null) {
-                $scope.ds = {};
+            if ($scope.driverName== null) {
+                $scope.driver = {};
                 return;
             }
 
             var data = {
-                "address": [{"subsystem": "datasources"}, {"data-source": null}],
+                "address": [{"subsystem": "datasources"}, {}],
                 "operation": "remove",
                 "operation-headers" : {"allow-resource-service-restart" : true }
             };
 
-            data.address[1]['data-source'] = $scope.dsName;
+            data.address[1]['jdbc-driver'] = $scope.driverName;
 
             $http({
                 method: 'POST',
@@ -163,12 +158,12 @@ angular
                 data: data
             }).
             success(function (data, status, headers, config) {
-                $scope.dsName = null
+                $scope.driverName = null
                 list();
                 $scope.load();
             }).
             error(function (data, status, headers, config) {
-                $scope.dsName = null;
+                $scope.driverName = null;
                 $scope.error = data["failure-description"];
                 if (data['response-headers']) {
                     $scope.processState = data['response-headers']['process-state'];
@@ -177,7 +172,7 @@ angular
         }
 
         $scope.duplicate = function() {
-            $scope.dsName = null;
+            $scope.driverName = null;
         }
 
         $scope.closeAlert = function() {
@@ -189,13 +184,13 @@ angular
         $scope.open = function () {
 
             var modalInstance = $modal.open({
-                templateUrl: 'ds-name.html',
-                controller: 'ModalInstanceCtrl'
+                templateUrl: 'driver-name.html',
+                controller: 'DriverModalInstanceCtrl'
             });
 
             modalInstance.result.then(
             function (name) {
-                $scope.dsName = name;
+                $scope.driverName = name;
                 $scope.create();
             },
             function () {
@@ -203,7 +198,7 @@ angular
             });
         };
     })
-    .controller('ModalInstanceCtrl', function ($scope, $modalInstance) {
+    .controller('DriverModalInstanceCtrl', function ($scope, $modalInstance) {
         $scope.ok = function () {
             $modalInstance.close($scope.name);
         };

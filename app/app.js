@@ -1,11 +1,12 @@
 'use strict';
 
 // Declare app level module which depends on views, and components
-angular.module('myApp',
+angular.module('flyNg',
   [
     'ngRoute',
     'ui.bootstrap',
-    'myApp.ds'
+    'flyNg.ds',
+    'flyNg.driver'
   ]
 ).
 config(['$routeProvider', function($routeProvider) {
