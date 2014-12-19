@@ -11,51 +11,34 @@ angular
             });
     }])
 
-    .controller('DataSourceController', ['$http', '$scope', '$modal', 'management', function ($http, $scope, $modal, management) {
+    .controller('DataSourceController', ['$http', '$scope', '$log', '$modal', 'management', function ($http, $scope, $log, $modal, management) {
 
         $scope.ds = {};
-        $scope.dsName = null;
+        $scope.name = null;
 
         list();
 
         function list() {
-
             management.list('/management/subsystem/datasources/', 'data-source').then(
                 function(data) {
-                    $scope.dsNames = data;
+                    $scope.names = data;
                 },
-                function(reason) {
-                    $scope.error = reason.error;
-                    if (reason.processState) {
-                        $scope.processState = reason.processState;
-                    }
-                }
+                error
             );
         }
 
         $scope.load = function() {
-
-            if ($scope.dsName == null) {
-                $scope.ds = {};
-            } else {
-                $http({
-                    method: 'GET', url: '/management/subsystem/datasources/data-source/' + $scope.dsName
-                }).
-                success(function (data) {
+            $log.debug("load for name : " + $scope.name);
+            management.load('/management/subsystem/datasources/data-source/', $scope.name).then(
+                function(data) {
                     $scope.ds = data;
-                    $scope.ds.name = $scope.dsName;
-                }).
-                error(function (data) {
-                    $scope.error = data["failure-description"];
-                    if (data['response-headers']) {
-                        $scope.processState = data['response-headers']['process-state'];
-                    }
-                });
-            }
+                },
+                error
+            );
         }
 
         $scope.save = function(attr) {
-            if ($scope.dsName == null) {
+            if ($scope.name == null) {
                 return;
             }
 
@@ -64,7 +47,7 @@ angular
                  "operation": "write-attribute",
                  "operation-headers" : {"allow-resource-service-restart" : true }
             };
-            data.address[1]['data-source'] = $scope.dsName;
+            data.address[1]['data-source'] = $scope.name;
             data.name = attr;
             data.value = $scope.ds[attr];
 
@@ -112,7 +95,7 @@ angular
                 "operation-headers" : {"allow-resource-service-restart" : true }
             };
 
-            data.address[1]['data-source'] = $scope.dsName;
+            data.address[1]['data-source'] = $scope.name;
             data['enabled'] = $scope.ds['enabled'];
             data['jndi-name'] = $scope.ds['jndi-name'];
             data['driver-name'] = $scope.ds['driver-name'];
@@ -130,7 +113,7 @@ angular
                 $scope.load();
             }).
             error(function (data) {
-                $scope.dsName = null;
+                $scope.name = null;
                 $scope.error = data["failure-description"];
                 if (data['response-headers']) {
                     $scope.processState = data['response-headers']['process-state'];
@@ -139,7 +122,7 @@ angular
         }
 
         $scope.remove = function() {
-            if ($scope.dsName == null) {
+            if ($scope.name == null) {
                 $scope.ds = {};
                 return;
             }
@@ -150,7 +133,7 @@ angular
                 "operation-headers" : {"allow-resource-service-restart" : true }
             };
 
-            data.address[1]['data-source'] = $scope.dsName;
+            data.address[1]['data-source'] = $scope.name;
 
             $http({
                 method: 'POST',
@@ -158,12 +141,12 @@ angular
                 data: data
             }).
             success(function () {
-                $scope.dsName = null
+                $scope.name = null
                 list();
                 $scope.load();
             }).
             error(function (data) {
-                $scope.dsName = null;
+                $scope.name = null;
                 $scope.error = data["failure-description"];
                 if (data['response-headers']) {
                     $scope.processState = data['response-headers']['process-state'];
@@ -172,7 +155,7 @@ angular
         }
 
         $scope.duplicate = function() {
-            $scope.dsName = null;
+            $scope.name = null;
         }
 
         $scope.closeAlert = function() {
@@ -188,13 +171,21 @@ angular
 
             modalInstance.result.then(
             function (name) {
-                $scope.dsName = name;
+                $scope.name = name;
                 $scope.create();
             },
             function () {
 
             });
         };
+
+        function error($scope, reason) {
+            $scope.error = reason.error;
+            if (reason.processState) {
+                $scope.processState = reason.processState;
+            }
+        }
+
     }])
     .controller('ModalInstanceCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
         $scope.ok = function () {

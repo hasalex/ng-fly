@@ -5,9 +5,9 @@
             <label class="col-sm-2 control-label">DataSource</label>
             <div class="col-sm-6">
                 <select id="inputName" class="form-control"
-                        ng-model="dsName"
+                        ng-model="name"
                         ng-model-options="{ updateOn: 'default' }"
-                        ng-options="key for key in dsNames"
+                        ng-options="key for key in names"
                         ng-change="load()">
                     <option value="">-- Select a DataSource--</option>
                 </select>
@@ -75,10 +75,10 @@
                         ng-show="processState == 'reload-required'"
                         ng-click="reload()">Reload</button>
                 <button class="btn btn-primary" id="buttonCreate"
-                        ng-hide="dsName"
+                        ng-hide="name"
                         ng-click="open()">Create</button>
                 <button class="btn btn-primary" id="buttonDuplicate"
-                        ng-show="dsName"
+                        ng-show="name"
                         ng-click="duplicate()">Duplicate</button>
                 <button class="btn btn-primary" id="buttonRemove"
                         ng-click="remove()">Remove</button>

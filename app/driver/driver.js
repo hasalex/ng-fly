@@ -11,7 +11,7 @@ angular
             });
     }])
 
-    .controller('DriverController', ['$http', '$scope', '$modal', 'management', function ($http, $scope, $modal, management) {
+    .controller('DriverController', ['$http', '$scope', '$log', '$modal', 'management', function ($http, $scope, $log, $modal, management) {
 
         $scope.name = null;
         $scope.driver = {};
@@ -23,33 +23,18 @@ angular
                 function(data) {
                     $scope.names = data;
                 },
-                function(reason) {
-                    $scope.error = reason.error;
-                    if (reason.processState) {
-                        $scope.processState = reason.processState;
-                    }
-                }
+                error
             );
         }
 
         $scope.load = function() {
-
-            if ($scope.name == null) {
-                $scope.driver = {};
-            } else {
-                $http({
-                    method: 'GET', url: '/management/subsystem/datasources/jdbc-driver/' + $scope.name
-                }).
-                success(function (data) {
+            $log.debug("load for name : " + $scope.name);
+            management.load('/management/subsystem/datasources/jdbc-driver/', $scope.name).then(
+                function(data) {
                     $scope.driver = data;
-                }).
-                error(function (data) {
-                    $scope.error = data["failure-description"];
-                    if (data['response-headers']) {
-                        $scope.processState = data['response-headers']['process-state'];
-                    }
-                });
-            }
+                },
+                error
+            );
         }
 
         $scope.save = function(attr) {
@@ -189,6 +174,14 @@ angular
 
             });
         };
+
+        function error($scope, reason) {
+            $scope.error = reason.error;
+            if (reason.processState) {
+                $scope.processState = reason.processState;
+            }
+        }
+
     }])
     .controller('DriverModalInstanceCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
         $scope.ok = function () {
