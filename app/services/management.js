@@ -46,18 +46,45 @@ angular
             return deferred.promise;
         }
 
+        function invoke(operation, address, args) {
+            var deferred = $q.defer();
+
+            var data = args ? args : {};
+            data.operation = operation;
+            data.address = address;
+
+            $http({
+                method: 'POST',
+                url: '/management',
+                data: data
+            }).
+            success(function (result) {
+                deferred.resolve(processState(result));
+            }).
+            error(function (data) {
+                deferred.reject(reason(data));
+            });
+            return deferred.promise;
+        }
+
+
         function reason(data) {
-            var reason = {};
-            reason.error = data["failure-description"];
+            var result = processState(data);
+            result.error = data["failure-description"];
+            return result;
+        }
+        function processState(data) {
+            var result = {};
             if (data['response-headers']) {
-                reason.processState = data['response-headers']['process-state'];
+                result.processState = data['response-headers']['process-state'];
             }
-            return reason;
+            return result;
         }
 
         return {
             list: list,
-            load: load
+            load: load,
+            invoke: invoke
         }
 
     }]);

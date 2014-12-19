@@ -11,7 +11,7 @@ angular
             });
     }])
 
-    .controller('DriverController', ['$http', '$scope', '$log', '$modal', 'management', function ($http, $scope, $log, $modal, management) {
+    .controller('DriverController', ['$scope', '$log', '$modal', 'management', function ($scope, $log, $modal, management) {
 
         $scope.name = null;
         $scope.driver = {};
@@ -28,7 +28,7 @@ angular
         }
 
         $scope.load = function() {
-            $log.debug("load for name : " + $scope.name);
+            $log.debug('load for name : ' + $scope.name);
             management.load('/management/subsystem/datasources/jdbc-driver/', $scope.name).then(
                 function(data) {
                     $scope.driver = data;
@@ -42,79 +42,38 @@ angular
                 return;
             }
 
-            var data = {
-                "address": [{"subsystem": "datasources"}, {"jdbc-driver": null}],
-                 "operation": "write-attribute",
-                 "operation-headers" : {"allow-resource-service-restart" : true }
-            };
-            data.address[1]['jdbc-driver'] = $scope.name;
-            data.name = attr;
-            data.value = $scope.driver[attr];
+            var data = {attr: $scope.driver[attr]};
 
-            $http({
-                method: 'POST',
-                url: '/management',
-                data: data
-            }).
-            success(function (data) {
-                $scope.processState = data['response-headers']['process-state'];
-            }).
-            error(function (data) {
-                $scope.error = data["failure-description"];
-                if (data['response-headers']) {
-                    $scope.processState = data['response-headers']['process-state'];
-                }
-            });
-
+            management.invoke('write-attribute', address(), data).then(
+                function (data) {
+                    $scope.processState = data;
+                },
+                error
+            )
         }
 
         $scope.reload = function() {
-            var data = { "operation": "reload" };
-            $http({
-                method: 'POST',
-                url: '/management',
-                data: data
-            }).
-            success(function () {
-                $scope.processState = false;
-            }).
-            error(function (data) {
-                $scope.error = data["failure-description"];
-                if (data['response-headers']) {
-                    $scope.processState = data['response-headers']['process-state'];
-                }
-            });
-
+            management.invoke( 'reload').then(
+                function (data) {
+                    $scope.processState = data;
+                },
+                error
+            );
         }
 
         $scope.create = function() {
-            var data = {
-                "address": [{"subsystem": "datasources"}, {"jdbc-driver": null}],
-                "operation": "add",
-                "operation-headers" : {"allow-resource-service-restart" : true }
-            };
+            $scope.driver['driver-name'] = $scope.name;
 
-            data.address[1]['jdbc-driver'] = $scope.name;
-            data['driver-name'] = $scope.name;
-            data['driver-module-name'] = $scope.driver['driver-module-name'];
-            data['driver-xa-datasource-class-name'] = $scope.driver['driver-xa-datasource-class-name'];
-
-            $http({
-                method: 'POST',
-                url: '/management',
-                data: data
-            }).
-            success(function () {
-                list();
-                $scope.load();
-            }).
-            error(function (data) {
-                $scope.name = null;
-                $scope.error = data["failure-description"];
-                if (data['response-headers']) {
-                    $scope.processState = data['response-headers']['process-state'];
-                }
-            });
+            management.invoke('add', address(), $scope.driver).then(
+                function () {
+                    list();
+                    $scope.load();
+                },
+                function(reason) {
+                    $log.warn(reason);
+                    $scope.name = null;
+                    error(reason);
+                });
         }
 
         $scope.remove = function() {
@@ -123,31 +82,17 @@ angular
                 return;
             }
 
-            var data = {
-                "address": [{"subsystem": "datasources"}, {}],
-                "operation": "remove",
-                "operation-headers" : {"allow-resource-service-restart" : true }
-            };
-
-            data.address[1]['jdbc-driver'] = $scope.name;
-
-            $http({
-                method: 'POST',
-                url: '/management',
-                data: data
-            }).
-            success(function () {
-                $scope.name = null
-                list();
-                $scope.load();
-            }).
-            error(function (data) {
-                $scope.name = null;
-                $scope.error = data["failure-description"];
-                if (data['response-headers']) {
-                    $scope.processState = data['response-headers']['process-state'];
+            management.invoke('remove', address()).then(
+                function () {
+                    $scope.name = null
+                    list();
+                    $scope.driver = {};
+                },
+                function () {
+                    $scope.name = null;
+                    error()
                 }
-            });
+            )
         }
 
         $scope.duplicate = function() {
@@ -169,17 +114,18 @@ angular
             function (name) {
                 $scope.name = name;
                 $scope.create();
-            },
-            function () {
-
             });
         };
 
-        function error($scope, reason) {
+        function error(reason) {
             $scope.error = reason.error;
             if (reason.processState) {
                 $scope.processState = reason.processState;
             }
+        }
+
+        function address() {
+            return [{"subsystem": "datasources"}, {"jdbc-driver": $scope.name}];
         }
 
     }])

@@ -11,7 +11,7 @@ angular
             });
     }])
 
-    .controller('DataSourceController', ['$http', '$scope', '$log', '$modal', 'management', function ($http, $scope, $log, $modal, management) {
+    .controller('DataSourceController', ['$scope', '$log', '$modal', 'management', function ($scope, $log, $modal, management) {
 
         $scope.ds = {};
         $scope.name = null;
@@ -42,60 +42,27 @@ angular
                 return;
             }
 
-            var data = {
-                "address": [{"subsystem": "datasources"}, {"data-source": null}],
-                 "operation": "write-attribute",
-                 "operation-headers" : {"allow-resource-service-restart" : true }
-            };
-            data.address[1]['data-source'] = $scope.name;
-            data.name = attr;
-            data.value = $scope.ds[attr];
+            var data = {"name": attr, "value": $scope.ds[attr]};
 
-            $http({
-                method: 'POST',
-                url: '/management',
-                data: data
-            }).
-            success(function (data) {
-                $scope.processState = data['response-headers']['process-state'];
-            }).
-            error(function (data) {
-                $scope.error = data["failure-description"];
-                if (data['response-headers']) {
-                    $scope.processState = data['response-headers']['process-state'];
-                }
-            });
-
+            management.invoke("write-attribute", address(), data).then(
+                function (data) {
+                    $scope.processState = data.processState;
+                },
+                error
+            )
         }
 
         $scope.reload = function() {
-            var data = { "operation": "reload" };
-            $http({
-                method: 'POST',
-                url: '/management',
-                data: data
-            }).
-            success(function (data) {
-                console.log(data);
-                $scope.processState = false;
-            }).
-            error(function (data) {
-                $scope.error = data["failure-description"];
-                if (data['response-headers']) {
-                    $scope.processState = data['response-headers']['process-state'];
-                }
-            });
-
+            management.invoke( "reload").then(
+                function (data) {
+                    $scope.processState = data.processState;
+                },
+                error
+            );
         }
 
         $scope.create = function() {
-            var data = {
-                "address": [{"subsystem": "datasources"}, {"data-source": null}],
-                "operation": "add",
-                "operation-headers" : {"allow-resource-service-restart" : true }
-            };
-
-            data.address[1]['data-source'] = $scope.name;
+            var data = {};
             data['enabled'] = $scope.ds['enabled'];
             data['jndi-name'] = $scope.ds['jndi-name'];
             data['driver-name'] = $scope.ds['driver-name'];
@@ -103,22 +70,14 @@ angular
             data['user-name'] = $scope.ds['user-name'];
             data['password'] = $scope.ds['password'];
 
-            $http({
-                method: 'POST',
-                url: '/management',
-                data: data
-            }).
-            success(function () {
-                list();
-                $scope.load();
-            }).
-            error(function (data) {
-                $scope.name = null;
-                $scope.error = data["failure-description"];
-                if (data['response-headers']) {
-                    $scope.processState = data['response-headers']['process-state'];
-                }
-            });
+            management.invoke("add", address(), data).then(
+                function (data) {
+                    list();
+                    $scope.load();
+                    $scope.processState = data.processState;
+                },
+                error
+            )
         }
 
         $scope.remove = function() {
@@ -127,31 +86,17 @@ angular
                 return;
             }
 
-            var data = {
-                "address": [{"subsystem": "datasources"}, {"data-source": null}],
-                "operation": "remove",
-                "operation-headers" : {"allow-resource-service-restart" : true }
-            };
-
-            data.address[1]['data-source'] = $scope.name;
-
-            $http({
-                method: 'POST',
-                url: '/management',
-                data: data
-            }).
-            success(function () {
-                $scope.name = null
-                list();
-                $scope.load();
-            }).
-            error(function (data) {
-                $scope.name = null;
-                $scope.error = data["failure-description"];
-                if (data['response-headers']) {
-                    $scope.processState = data['response-headers']['process-state'];
+            management.invoke("remove", address()).then(
+                function () {
+                    $scope.name = null
+                    list();
+                    $scope.load();
+                },
+                function (reason) {
+                    $scope.name = null;
+                    error(reason);
                 }
-            });
+            )
         }
 
         $scope.duplicate = function() {
@@ -163,7 +108,6 @@ angular
         };
 
         $scope.open = function () {
-
             var modalInstance = $modal.open({
                 templateUrl: 'ds-name.html',
                 controller: 'ModalInstanceCtrl'
@@ -173,18 +117,20 @@ angular
             function (name) {
                 $scope.name = name;
                 $scope.create();
-            },
-            function () {
-
             });
         };
 
-        function error($scope, reason) {
+        function error(reason) {
             $scope.error = reason.error;
             if (reason.processState) {
                 $scope.processState = reason.processState;
             }
         }
+
+        function address() {
+            return [{"subsystem": "datasources"}, {"data-source": $scope.name}];
+        }
+
 
     }])
     .controller('ModalInstanceCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
