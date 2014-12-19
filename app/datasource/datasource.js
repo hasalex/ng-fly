@@ -10,31 +10,38 @@ angular
                 controller: 'DataSourceController'
             });
     }])
-
     .controller('DataSourceController', ['$scope', '$log', '$modal', 'management', function ($scope, $log, $modal, management) {
 
-        $scope.ds = {};
         $scope.name = null;
+        $scope.resource = {};
+
+        var rootAddress = [ { "subsystem": "datasources" } ];
+        var resourceType = "data-source";
 
         list();
 
         function list() {
-            management.list('/management/subsystem/datasources/', 'data-source').then(
+            var attr = { "child-type": resourceType };
+            management.invoke('read-children-names', rootAddress, attr).then(
                 function(data) {
-                    $scope.names = data;
+                    $scope.names = data.result;
                 },
                 error
             );
         }
 
         $scope.load = function() {
-            $log.debug("load for name : " + $scope.name);
-            management.load('/management/subsystem/datasources/data-source/', $scope.name).then(
-                function(data) {
-                    $scope.ds = data;
-                },
-                error
-            );
+            if ($scope.name == null) {
+                $scope.resource = {};
+            } else {
+                management.invoke('read-resource', address()).then(
+                    function(data) {
+                        $log.debug(data);
+                        $scope.resource = data.result;
+                    },
+                    error
+                )
+            }
         }
 
         $scope.save = function(attr) {
@@ -42,7 +49,7 @@ angular
                 return;
             }
 
-            var data = {"name": attr, "value": $scope.ds[attr]};
+            var data = {"name": attr, "value": $scope.resource[attr]};
 
             management.invoke("write-attribute", address(), data).then(
                 function (data) {
@@ -63,12 +70,12 @@ angular
 
         $scope.create = function() {
             var data = {};
-            data['enabled'] = $scope.ds['enabled'];
-            data['jndi-name'] = $scope.ds['jndi-name'];
-            data['driver-name'] = $scope.ds['driver-name'];
-            data['connection-url'] = $scope.ds['connection-url'];
-            data['user-name'] = $scope.ds['user-name'];
-            data['password'] = $scope.ds['password'];
+            data['enabled'] = $scope.resource['enabled'];
+            data['jndi-name'] = $scope.resource['jndi-name'];
+            data['driver-name'] = $scope.resource['driver-name'];
+            data['connection-url'] = $scope.resource['connection-url'];
+            data['user-name'] = $scope.resource['user-name'];
+            data['password'] = $scope.resource['password'];
 
             management.invoke("add", address(), data).then(
                 function (data) {
@@ -82,7 +89,7 @@ angular
 
         $scope.remove = function() {
             if ($scope.name == null) {
-                $scope.ds = {};
+                $scope.resource = {};
                 return;
             }
 
@@ -114,10 +121,10 @@ angular
             });
 
             modalInstance.result.then(
-            function (name) {
-                $scope.name = name;
-                $scope.create();
-            });
+                function (name) {
+                    $scope.name = name;
+                    $scope.create();
+                });
         };
 
         function error(reason) {
@@ -128,11 +135,16 @@ angular
         }
 
         function address() {
-            return [{"subsystem": "datasources"}, {"data-source": $scope.name}];
+            var address = rootAddress.slice(0);
+            var resource = {};
+            resource[resourceType] = $scope.name;
+            address.push( resource );
+            return address;
         }
 
 
     }])
+
     .controller('ModalInstanceCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
         $scope.ok = function () {
             $modalInstance.close($scope.name);

@@ -19,7 +19,8 @@
             <div class="col-sm-6">
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" id="inputEnabled" ng-model="ds.enabled"
+                        <input type="checkbox" id="inputEnabled"
+                               ng-model="resource.enabled"
                                ng-model-options="{ updateOn: 'default' }"
                                ng-change="save('enabled')">
                     </label>
@@ -30,7 +31,8 @@
         <div class="form-group">
             <label for="inputJndiName" class="col-sm-2 control-label">Jndi Name</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" id="inputJndiName" ng-model="ds['jndi-name']"
+                <input type="text" class="form-control" id="inputJndiName"
+                       ng-model="resource['jndi-name']"
                        ng-change="save('jndi-name')">
             </div>
         </div>
@@ -38,7 +40,8 @@
         <div class="form-group">
             <label for="inputDriver" class="col-sm-2 control-label">Driver</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" id="inputDriver" ng-model="ds['driver-name']"
+                <input type="text" class="form-control" id="inputDriver"
+                       ng-model="resource['driver-name']"
                        ng-change="save('driver-name')">
             </div>
         </div>
@@ -47,7 +50,7 @@
             <label for="inputConnectionUrl" class="col-sm-2 control-label">Connection URL</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" id="inputConnectionUrl"
-                       ng-model="ds['connection-url']"
+                       ng-model="resource['connection-url']"
                        ng-change="save('connection-url')">
             </div>
         </div>
@@ -55,7 +58,8 @@
         <div class="form-group">
             <label for="inputUserName" class="col-sm-2 control-label">User Name</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" id="inputUserName" ng-model="ds['user-name']"
+                <input type="text" class="form-control" id="inputUserName"
+                       ng-model="resource['user-name']"
                        ng-change="save('user-name')">
             </div>
         </div>
@@ -63,7 +67,8 @@
         <div class="form-group">
             <label for="inputPassword" class="col-sm-2 control-label">Password</label>
             <div class="col-sm-6">
-                <input type="password" class="form-control" id="inputPassword" ng-model="ds.password"
+                <input type="password" class="form-control" id="inputPassword"
+                       ng-model="resource.password"
                        ng-change="save('password')">
             </div>
         </div>

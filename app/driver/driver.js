@@ -14,27 +14,34 @@ angular
     .controller('DriverController', ['$scope', '$log', '$modal', 'management', function ($scope, $log, $modal, management) {
 
         $scope.name = null;
-        $scope.driver = {};
+        $scope.resource = {};
+
+        var rootAddress = [ { "subsystem": "datasources" } ];
+        var resourceType = "jdbc-driver";
 
         list();
 
         function list() {
-            management.list('/management/subsystem/datasources/', 'jdbc-driver').then(
+            var attr = { "child-type": resourceType };
+            management.invoke('read-children-names', rootAddress, attr).then(
                 function(data) {
-                    $scope.names = data;
+                    $scope.names = data.result;
                 },
                 error
             );
         }
 
         $scope.load = function() {
-            $log.debug('load for name : ' + $scope.name);
-            management.load('/management/subsystem/datasources/jdbc-driver/', $scope.name).then(
-                function(data) {
-                    $scope.driver = data;
-                },
-                error
-            );
+            if ($scope.name == null) {
+                $scope.resource = {};
+            } else {
+                management.invoke('read-resource', address()).then(
+                    function(data) {
+                        $scope.resource = data.result;
+                    },
+                    error
+                )
+            }
         }
 
         $scope.save = function(attr) {
@@ -42,7 +49,7 @@ angular
                 return;
             }
 
-            var data = {attr: $scope.driver[attr]};
+            var data = {attr: $scope.resource[attr]};
 
             management.invoke('write-attribute', address(), data).then(
                 function (data) {
@@ -62,9 +69,9 @@ angular
         }
 
         $scope.create = function() {
-            $scope.driver['driver-name'] = $scope.name;
+            $scope.resource['driver-name'] = $scope.name;
 
-            management.invoke('add', address(), $scope.driver).then(
+            management.invoke('add', address(), $scope.resource).then(
                 function () {
                     list();
                     $scope.load();
@@ -78,15 +85,15 @@ angular
 
         $scope.remove = function() {
             if ($scope.name== null) {
-                $scope.driver = {};
+                $scope.resource = {};
                 return;
             }
 
             management.invoke('remove', address()).then(
                 function () {
-                    $scope.name = null
+                    $scope.name = null;
                     list();
-                    $scope.driver = {};
+                    $scope.resource = {};
                 },
                 function () {
                     $scope.name = null;
@@ -125,7 +132,11 @@ angular
         }
 
         function address() {
-            return [{"subsystem": "datasources"}, {"jdbc-driver": $scope.name}];
+            var address = rootAddress.slice(0);
+            var resource = {};
+            resource[resourceType] = $scope.name;
+            address.push( resource );
+            return address;
         }
 
     }])
