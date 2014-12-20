@@ -4,7 +4,7 @@
 angular
     .module('services', [])
 
-    .factory('management', ['$q', '$http', function($q, $http){
+    .factory('management', ['$q', '$http', '$log', function($q, $http, $log){
 
         function invoke(operation, address, args) {
             var deferred = $q.defer();
@@ -37,12 +37,29 @@ angular
             if (result['response-headers']) {
                 result.processState = result['response-headers']['process-state'];
                 result['response-headers'] = null;
+                $log.debug('process-state=' + result.processState);
             }
             return result;
         }
 
+        function getterSetterWithExpression(attr) {
+
+            return function(newValue) {
+                if (angular.isDefined(newValue)) {
+                    this[attr] = newValue;
+                }
+                if (this[attr].EXPRESSION_VALUE) {
+                    return this[attr].EXPRESSION_VALUE;
+                } else {
+                    return this[attr];
+                }
+            }
+        };
+
+
         return {
-            invoke: invoke
+            invoke: invoke,
+            getterSetterWithExpression: getterSetterWithExpression
         }
 
     }]);

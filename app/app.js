@@ -7,7 +7,8 @@ angular.module('flyNg',
     'ui.bootstrap',
     'services',
     'flyNg.ds',
-    'flyNg.driver'
+    'flyNg.driver',
+    'flyNg.network'
   ]
 ).
 config(['$routeProvider', function($routeProvider) {
