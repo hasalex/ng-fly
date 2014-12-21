@@ -1,0 +1,63 @@
+<div>
+    <form class="form-horizontal" role="form" ng-model-options="{ updateOn: 'blur', getterSetter: true }">
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Socket Binding</label>
+            <div class="col-sm-6">
+                <select id="inputName" class="form-control"
+                        ng-model="name"
+                        ng-model-options="{ updateOn: 'default' }"
+                        ng-options="key for key in names"
+                        ng-change="load()">
+                    <option value="">-- Select a Socket Binding--</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputPort" class="col-sm-3 control-label">Port</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="inputPort"
+                       ng-model="resource.xport"
+                       ng-change="save('port')">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-6">
+                <button class="btn btn-primary" id="buttonReload"
+                        ng-show="processState == 'reload-required'"
+                        ng-click="reload()">Reload</button>
+                <button class="btn btn-primary" id="buttonCreate"
+                        ng-hide="name"
+                        ng-click="open()">Create</button>
+                <button class="btn btn-primary" id="buttonDuplicate"
+                        ng-show="name"
+                        ng-click="duplicate()">Duplicate</button>
+                <button class="btn btn-primary" id="buttonRemove"
+                        ng-click="remove()">Remove</button>
+            </div>
+        </div>
+
+        <div class="col-sm-9">
+            <alert type="danger" close="closeAlert()" ng-show="error" >{{error}}</alert>
+        </div>
+
+    </form>
+</div>
+
+<script type="text/ng-template" id="driver-name.html">
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="inputDriverName" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="inputDriverName" ng-model="name">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">OK</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
