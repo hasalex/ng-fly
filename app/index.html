@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
   <link rel="stylesheet" href="app.css">
   <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
+
 </head>
 <body>
 
@@ -25,12 +26,14 @@
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ng-controller="MenuController">
         <ul class="nav navbar-nav">
-          <li><a href="#/ds">DataSources</a></li>
-          <li><a href="#/driver">Drivers</a></li>
+          <li ng-if="hasSubsystem('datasources')"><a href="#/ds">DataSources</a></li>
+          <li ng-if="hasSubsystem('datasources')"><a href="#/driver">Drivers</a></li>
           <li><a href="#/interface">Interfaces</a></li>
           <li><a href="#/socket-binding">Socket Bindings</a></li>
+          <li ng-if="hasSubsystem('security')"><a href="#/">Security Domains (TBD)</a></li>
+          <li ng-if="hasSubsystem('messaging')"><a href="#/">JMS Destinations (TBD)</a></li>
         </ul>
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
@@ -42,9 +45,6 @@
 
   <div ng-view class="body"></div>
 
-  <!-- In production use:
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
-  -->
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-route/angular-route.js"></script>
   <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
