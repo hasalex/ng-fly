@@ -1,25 +1,25 @@
 'use strict';
 
 angular
-    .module('flyNg.network', ['ngRoute', 'services'])
+    .module('flyNg.security', ['ngRoute', 'services'])
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
-            .when('/interface', {
-                templateUrl: 'network/interface.html',
-                controller: 'InterfaceController'
+            .when('/security-domain', {
+                templateUrl: 'security/security-domain.html',
+                controller: 'SecurityDomainController'
             });
     }])
 
-    .controller('InterfaceController',
+    .controller('SecurityDomainController',
                 ['$scope', '$log', '$modal', 'management', 'modalService',
-                 function ($scope, $log, $modal, management, modalService) {
+                function ($scope, $log, $modal, management, modalService) {
 
         $scope.name = null;
         $scope.resource = {};
 
-        var rootAddress = [ ];
-        var resourceType = "interface";
+        var rootAddress = [ {"subsystem": "security"} ];
+        var resourceType = "security-domain";
 
         list();
 
@@ -45,7 +45,7 @@ angular
                     error
                 )
             }
-        }
+        };
 
         $scope.save = function(attr) {
             if ($scope.name == null) {
@@ -60,7 +60,7 @@ angular
                 },
                 error
             )
-        }
+        };
 
         $scope.reload = function() {
             management.invoke( 'reload').then(
@@ -69,7 +69,7 @@ angular
                 },
                 error
             );
-        }
+        };
 
         $scope.remove = function() {
             if ($scope.name== null) {
@@ -88,11 +88,11 @@ angular
                     error()
                 }
             )
-        }
+        };
 
         $scope.duplicate = function() {
             $scope.name = null;
-        }
+        };
 
         $scope.closeAlert = function() {
             $scope.error = null;
@@ -100,7 +100,7 @@ angular
 
         $scope.open = function () {
             modalService.show().then(
-                function(result) {
+                function (result) {
                     create(result.name);
                 });
         };
@@ -135,13 +135,4 @@ angular
             return address;
         }
 
-    }])
-    .controller('DriverModalInstanceCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
-        $scope.ok = function () {
-            $modalInstance.close($scope.name);
-        };
-
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
     }]);

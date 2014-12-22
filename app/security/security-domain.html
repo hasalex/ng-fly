@@ -2,24 +2,15 @@
     <form class="form-horizontal" role="form" ng-model-options="{ updateOn: 'blur', getterSetter: true }">
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">Interface</label>
+            <label class="col-sm-3 control-label">Security Domain</label>
             <div class="col-sm-6">
                 <select id="inputName" class="form-control"
                         ng-model="name"
                         ng-model-options="{ updateOn: 'default' }"
                         ng-options="key for key in names"
                         ng-change="load()">
-                    <option value="">-- Select an Interface--</option>
+                    <option value="">-- Select a Security Domain--</option>
                 </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="inputInetAddress" class="col-sm-3 control-label">INET Address</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" id="inputInetAddress"
-                       ng-model="resource.inetAddress"
-                       ng-change="save('inet-address')">
             </div>
         </div>
 

@@ -5,12 +5,14 @@ angular
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
-            .when('/ds', {
+            .when('/datasource', {
                 templateUrl: 'datasource/datasource.html',
                 controller: 'DataSourceController'
             });
     }])
-    .controller('DataSourceController', ['$scope', '$log', '$modal', 'management', function ($scope, $log, $modal, management) {
+    .controller('DataSourceController',
+                ['$scope', '$log', '$modal', 'management', 'modalService',
+                 function ($scope, $log, $modal, management, modalService) {
 
         $scope.name = null;
         $scope.resource = {};
@@ -68,25 +70,6 @@ angular
             );
         }
 
-        $scope.create = function() {
-            var data = {};
-            data['enabled'] = $scope.resource['enabled'];
-            data['jndi-name'] = $scope.resource['jndi-name'];
-            data['driver-name'] = $scope.resource['driver-name'];
-            data['connection-url'] = $scope.resource['connection-url'];
-            data['user-name'] = $scope.resource['user-name'];
-            data['password'] = $scope.resource['password'];
-
-            management.invoke("add", address(), data).then(
-                function (data) {
-                    list();
-                    $scope.load();
-                    $scope.processState = data.processState;
-                },
-                error
-            )
-        }
-
         $scope.remove = function() {
             if ($scope.name == null) {
                 $scope.resource = {};
@@ -115,20 +98,37 @@ angular
         };
 
         $scope.open = function () {
-            var modalInstance = $modal.open({
-                templateUrl: 'ds-name.html',
-                controller: 'ModalInstanceCtrl'
-            });
-
-            modalInstance.result.then(
-                function (name) {
-                    $scope.name = name;
-                    $scope.create();
+            modalService.show().then(
+                function(result) {
+                    create(result.name);
                 });
         };
 
+        function create(name) {
+            $scope.name = name;
+            var data = {};
+            data['enabled'] = $scope.resource['enabled'];
+            data['jndi-name'] = $scope.resource['jndi-name'];
+            data['driver-name'] = $scope.resource['driver-name'];
+            data['connection-url'] = $scope.resource['connection-url'];
+            data['user-name'] = $scope.resource['user-name'];
+            data['password'] = $scope.resource['password'];
+
+            management.invoke("add", address(), data).then(
+             function (data) {
+                 list();
+                 $scope.load();
+                 $scope.processState = data.processState;
+             },
+            function (reason) {
+                $scope.name = null;
+                error(reason);
+            }
+            )
+        }
+
         function error(reason) {
-            $scope.error = reason.error;
+            $scope.error = reason.message;
             if (reason.processState) {
                 $scope.processState = reason.processState;
             }
@@ -142,15 +142,4 @@ angular
             return address;
         }
 
-
-    }])
-
-    .controller('ModalInstanceCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
-        $scope.ok = function () {
-            $modalInstance.close($scope.name);
-        };
-
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
     }]);

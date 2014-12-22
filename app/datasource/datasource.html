@@ -2,7 +2,7 @@
     <form class="form-horizontal" role="form" ng-model-options="{ updateOn: 'blur' }">
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">DataSource</label>
+            <label class="col-sm-3 control-label">DataSource</label>
             <div class="col-sm-6">
                 <select id="inputName" class="form-control"
                         ng-model="name"
@@ -15,7 +15,7 @@
         </div>
 
         <div class="form-group">
-            <label for="inputEnabled" class="col-sm-2 control-label">Enabled</label>
+            <label for="inputEnabled" class="col-sm-3 control-label">Enabled</label>
             <div class="col-sm-6">
                 <div class="checkbox">
                     <label>
@@ -29,7 +29,7 @@
         </div>
 
         <div class="form-group">
-            <label for="inputJndiName" class="col-sm-2 control-label">Jndi Name</label>
+            <label for="inputJndiName" class="col-sm-3 control-label">Jndi Name</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" id="inputJndiName"
                        ng-model="resource['jndi-name']"
@@ -38,7 +38,7 @@
         </div>
 
         <div class="form-group">
-            <label for="inputDriver" class="col-sm-2 control-label">Driver</label>
+            <label for="inputDriver" class="col-sm-3 control-label">Driver</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" id="inputDriver"
                        ng-model="resource['driver-name']"
@@ -47,7 +47,7 @@
         </div>
 
         <div class="form-group">
-            <label for="inputConnectionUrl" class="col-sm-2 control-label">Connection URL</label>
+            <label for="inputConnectionUrl" class="col-sm-3 control-label">Connection URL</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" id="inputConnectionUrl"
                        ng-model="resource['connection-url']"
@@ -56,7 +56,7 @@
         </div>
 
         <div class="form-group">
-            <label for="inputUserName" class="col-sm-2 control-label">User Name</label>
+            <label for="inputUserName" class="col-sm-3 control-label">User Name</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" id="inputUserName"
                        ng-model="resource['user-name']"
@@ -65,7 +65,7 @@
         </div>
 
         <div class="form-group">
-            <label for="inputPassword" class="col-sm-2 control-label">Password</label>
+            <label for="inputPassword" class="col-sm-3 control-label">Password</label>
             <div class="col-sm-6">
                 <input type="password" class="form-control" id="inputPassword"
                        ng-model="resource.password"
@@ -74,7 +74,7 @@
         </div>
 
         <div class="form-group">
-            <div class="col-sm-2"></div>
+            <div class="col-sm-3"></div>
             <div class="col-sm-6">
                 <button class="btn btn-primary" id="buttonReload"
                         ng-show="processState == 'reload-required'"
@@ -96,18 +96,3 @@
 
     </form>
 </div>
-
-<script type="text/ng-template" id="ds-name.html">
-    <div class="modal-body">
-        <div class="form-group">
-            <label for="inputDsName" class="col-sm-2 control-label">Name</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" id="inputDsName" ng-model="name">
-            </div>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-    </div>
-</script>

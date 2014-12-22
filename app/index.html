@@ -28,11 +28,11 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ng-controller="MenuController">
         <ul class="nav navbar-nav">
-          <li ng-if="hasSubsystem('datasources')"><a href="#/ds">DataSources</a></li>
+          <li ng-if="hasSubsystem('datasources')"><a href="#/datasource">DataSources</a></li>
           <li ng-if="hasSubsystem('datasources')"><a href="#/driver">Drivers</a></li>
           <li><a href="#/interface">Interfaces</a></li>
           <li><a href="#/socket-binding">Socket Bindings</a></li>
-          <li ng-if="hasSubsystem('security')"><a href="#/">Security Domains (TBD)</a></li>
+          <li ng-if="hasSubsystem('security')"><a href="#/security-domain">Security Domains (TBD)</a></li>
           <li ng-if="hasSubsystem('messaging')"><a href="#/">JMS Destinations (TBD)</a></li>
         </ul>
       </div><!-- /.navbar-collapse -->
@@ -50,10 +50,12 @@
   <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 
   <script src="services/management.js"></script>
+  <script src="services/modal.js"></script>
   <script src="datasource/datasource.js"></script>
-  <script src="driver/driver.js"></script>
+  <script src="datasource/driver.js"></script>
   <script src="network/interface.js"></script>
   <script src="network/socket-binding.js"></script>
+  <script src="security/security-domain.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

@@ -6,12 +6,14 @@ angular
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
             .when('/driver', {
-                templateUrl: 'driver/driver.html',
+                templateUrl: 'datasource/driver.html',
                 controller: 'DriverController'
             });
     }])
 
-    .controller('DriverController', ['$scope', '$log', '$modal', 'management', function ($scope, $log, $modal, management) {
+    .controller('DriverController',
+                ['$scope', '$log', '$modal', 'management', 'modalService',
+                 function ($scope, $log, $modal, management, modalService) {
 
         $scope.name = null;
         $scope.resource = {};
@@ -68,21 +70,6 @@ angular
             );
         }
 
-        $scope.create = function() {
-            $scope.resource['driver-name'] = $scope.name;
-
-            management.invoke('add', address(), $scope.resource).then(
-                function () {
-                    list();
-                    $scope.load();
-                },
-                function(reason) {
-                    $log.warn(reason);
-                    $scope.name = null;
-                    error(reason);
-                });
-        }
-
         $scope.remove = function() {
             if ($scope.name== null) {
                 $scope.resource = {};
@@ -111,18 +98,26 @@ angular
         };
 
         $scope.open = function () {
-
-            var modalInstance = $modal.open({
-                templateUrl: 'driver-name.html',
-                controller: 'DriverModalInstanceCtrl'
-            });
-
-            modalInstance.result.then(
-            function (name) {
-                $scope.name = name;
-                $scope.create();
-            });
+            modalService.show().then(
+                function(result) {
+                    create(result.name);
+                });
         };
+
+        function create(name) {
+            $scope.name = name;
+            $scope.resource['driver-name'] = name;
+
+            management.invoke('add', address(), $scope.resource).then(
+                function () {
+                    list();
+                    $scope.load();
+                },
+                function(reason) {
+                    $scope.name = null;
+                    error(reason);
+                });
+        }
 
         function error(reason) {
             $scope.error = reason.error;

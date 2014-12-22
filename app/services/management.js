@@ -1,6 +1,5 @@
 'use strict';
 
-
 angular
     .module('services', [])
 
@@ -22,7 +21,9 @@ angular
                 deferred.resolve(processState(result));
             }).
             error(function (data) {
-                deferred.reject(reason(data));
+                var r = reason(data);
+                $log.warn(r);
+                deferred.reject(r);
             });
             return deferred.promise;
         }
@@ -30,7 +31,7 @@ angular
 
         function reason(data) {
             var result = processState(data);
-            result.error = data["failure-description"];
+            result.message = data["failure-description"];
             return result;
         }
         function processState(result) {
