@@ -18,7 +18,7 @@ angular
     //  $routeProvider.otherwise({redirectTo: '/ds'});
     }]).
 
-    controller('MenuController', ['$scope', '$location', 'management', function ($scope, $location, management) {
+    controller('MenuController', ['$scope', '$location', '$log', 'management', function ($scope, $location, $log, management) {
         var resources = new Array();
 
         management.invoke('read-children-names', [], {"child-type": "subsystem"}).then(
@@ -29,5 +29,9 @@ angular
 
         $scope.hasSubsystem = function (name) {
             return (resources.indexOf(name) >= 0);
+        }
+
+        $scope.active = function (path) {
+            return (path === $location.path() ? 'active' : '');
         }
     }]);
