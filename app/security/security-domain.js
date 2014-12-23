@@ -34,18 +34,27 @@ angular
         }
 
         $scope.load = function() {
+            $scope.loginModules = [];
             if ($scope.name == null) {
                 $scope.resource = {};
             } else {
                 management.invoke('read-resource', address()).then(
                     function(data) {
                         $scope.resource = data.result;
-                        $scope.resource.inetAddress = management.getterSetterWithExpression('inet-address');
+                        loadLoginModule();
                     },
                     error
                 )
             }
         };
+
+        function loadLoginModule() {
+            management.invoke('read-resource', [ {"subsystem": "security"}, {"security-domain": $scope.name}, {"authentication": "classic"} ]).then(
+                function(data) {
+                    $scope.loginModules = data.result['login-modules'];
+                }
+            )
+        }
 
         $scope.save = function(attr) {
             if ($scope.name == null) {
@@ -103,6 +112,17 @@ angular
                 function (result) {
                     create(result.name);
                 });
+        };
+
+        $scope.select = function(loginModule) {
+            $log.debug(loginModule);
+            $scope.loginModule = loginModule;
+            $scope.loginModule['module-options'].x_usersProperties = management.getterSetterWithExpression('usersProperties');
+            $scope.loginModule['module-options'].x_rolesProperties = management.getterSetterWithExpression('rolesProperties');
+        };
+
+        $scope.active = function(loginModule) {
+            return ($scope.loginModule == loginModule ? 'active' : '');
         };
 
         function create(name) {

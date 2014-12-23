@@ -44,14 +44,19 @@ angular
         }
 
         function getterSetterWithExpression(attr) {
+            $log.debug('getterSetterWithExpression for attr ' + attr);
 
             return function(newValue) {
+                $log.debug(this);
+
                 if (angular.isDefined(newValue)) {
                     this[attr] = newValue;
                 }
                 if (this[attr].EXPRESSION_VALUE) {
+                    $log.debug(this[attr].EXPRESSION_VALUE);
                     return this[attr].EXPRESSION_VALUE;
                 } else {
+                    $log.debug(this[attr]);
                     return this[attr];
                 }
             }

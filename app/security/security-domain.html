@@ -15,6 +15,80 @@
         </div>
 
         <div class="form-group">
+            <label for="inputCacheType" class="col-sm-3 control-label">Cache Type</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="inputCacheType"
+                       ng-model="resource['cache-type']"
+                       ng-change="save('cache-type')" >
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Login Modules</label>
+            <div class="col-sm-6">
+                <ul class="list-group">
+                    <li ng-repeat="loginModule in loginModules" ng-click="select(loginModule)"
+                        class="list-group-item {{active(loginModule)}}">{{loginModule.code}}</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel panel-default" ng-if="loginModule">
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="inputLoginModuleCode" class="col-sm-3 control-label">Code</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="inputLoginModuleCode"
+                               ng-model="loginModule.code" >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Flag</label>
+                    <div class="col-sm-6">
+                        <div class="btn-group">
+                            <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'required'">required</label>
+                            <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'requisite'">requisite</label>
+                            <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'sufficient'">sufficient</label>
+                            <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'optional'">optional</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputLoginModuleModule" class="col-sm-3 control-label">Module</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="inputLoginModuleModule"
+                               ng-model="loginModule.module" >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Module Options</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control"
+                               ng-model="'usersProperties'" >
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control"
+                               ng-model="loginModule['module-options'].x_usersProperties" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"></label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control"
+                               ng-model="'rolesProperties'" >
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control"
+                               ng-model="loginModule['module-options'].x_rolesProperties" >
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group col-sm-9">
             <div class="col-sm-3"></div>
             <div class="col-sm-6">
                 <button class="btn btn-primary" id="buttonReload"
