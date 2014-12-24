@@ -28,12 +28,12 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ng-controller="MenuController">
         <ul class="nav navbar-nav">
-          <li ng-if="hasSubsystem('datasources')" class="{{active('/datasource')}}"><a href="#/datasource">DataSources</a></li>
-          <li ng-if="hasSubsystem('datasources')" class="{{active('/driver')}}"><a href="#/driver">Drivers</a></li>
-          <li class="{{active('/interface')}}"><a href="#/interface">Interfaces</a></li>
-          <li class="{{active('/socket-binding')}}"><a href="#/socket-binding">Socket Bindings</a></li>
-          <li ng-if="hasSubsystem('security')" class="{{active('/security-domain')}}"><a href="#/security-domain">Security Domains (WIP)</a></li>
-          <li ng-if="hasSubsystem('messaging')" class="{{active('/xxx')}}"><a href="#/">JMS Destinations (TBD)</a></li>
+          <li ng-if="hasSubsystem('datasources')" ng-class="active('/datasource')"><a href="#/datasource">DataSources</a></li>
+          <li ng-if="hasSubsystem('datasources')" ng-class="active('/driver')"><a href="#/driver">Drivers</a></li>
+          <li ng-class="active('/interface')"><a href="#/interface">Interfaces</a></li>
+          <li ng-class="active('/socket-binding')"><a href="#/socket-binding">Socket Bindings</a></li>
+          <li ng-if="hasSubsystem('security')" ng-class="active('/security-domain')"><a href="#/security-domain">Security Domains (WIP)</a></li>
+          <li ng-if="hasSubsystem('messaging')" ng-class="active('/xxx')"><a href="#/">JMS Destinations (TBD)</a></li>
         </ul>
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
