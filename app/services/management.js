@@ -8,7 +8,7 @@ angular
         function invoke(operation, address, args) {
             var deferred = $q.defer();
 
-            var data = args ? args : {};
+            var data = angular.isDefined(args) ? args : {};
             data.operation = operation;
             data.address = address;
 
@@ -35,7 +35,7 @@ angular
             return result;
         }
         function processState(result) {
-            if (result['response-headers']) {
+            if ( angular.isDefined(result['response-headers']) ) {
                 result.processState = result['response-headers']['process-state'];
                 result['response-headers'] = null;
                 $log.debug('process-state=' + result.processState);
@@ -52,7 +52,7 @@ angular
                 if (angular.isDefined(newValue)) {
                     this[attr] = newValue;
                 }
-                if (this[attr].EXPRESSION_VALUE) {
+                if ( angular.isDefined(this[attr].EXPRESSION_VALUE) ) {
                     $log.debug(this[attr].EXPRESSION_VALUE);
                     return this[attr].EXPRESSION_VALUE;
                 } else {

@@ -121,7 +121,7 @@ angular
 
         function error(reason) {
             $scope.error = reason.error;
-            if (reason.processState) {
+            if ( angular.isDefined(reason.processState) ) {
                 $scope.processState = reason.processState;
             }
         }
@@ -134,13 +134,4 @@ angular
             return address;
         }
 
-    }])
-    .controller('DriverModalInstanceCtrl', ['$scope', '$modalInstance', function ($scope, $modalInstance) {
-        $scope.ok = function () {
-            $modalInstance.close($scope.name);
-        };
-
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
     }]);

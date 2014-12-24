@@ -129,7 +129,7 @@ angular
 
         function error(reason) {
             $scope.error = reason.message;
-            if (reason.processState) {
+            if ( angular.isDefined(reason.processState) ) {
                 $scope.processState = reason.processState;
             }
         }

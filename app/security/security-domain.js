@@ -122,7 +122,7 @@ angular
         };
 
         $scope.active = function(loginModule) {
-            return ($scope.loginModule == loginModule ? 'active' : '');
+            return ($scope.loginModule ==  angular.isDefined(loginModule) ? 'active' : '');
         };
 
         function create(name) {
@@ -142,7 +142,7 @@ angular
 
         function error(reason) {
             $scope.error = reason.error;
-            if (reason.processState) {
+            if ( angular.isDefined(reason.processState) ) {
                 $scope.processState = reason.processState;
             }
         }
