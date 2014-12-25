@@ -7,21 +7,23 @@ angular
         $routeProvider
             .when('/security-domain', {
                 templateUrl: 'security/security-domain.html',
-                controller: 'SecurityDomainController'
+                controller: 'SecurityDomainController',
+                reloadOnSearch: false
             });
     }])
 
     .controller('SecurityDomainController',
-                ['$scope', '$log', '$modal', 'management', 'modalService',
-                function ($scope, $log, $modal, management, modalService) {
+                ['$scope', '$log', '$routeParams', '$location', 'management', 'modalService',
+                    function ($scope, $log, $routeParams, $location, management, modalService) {
 
-        $scope.name = null;
+        $scope.name = angular.isDefined($routeParams.name) ? $routeParams.name : null;
         $scope.resource = {};
 
         var rootAddress = [ {"subsystem": "security"} ];
         var resourceType = "security-domain";
 
         list();
+        load();
 
         function list() {
             var attr = { "child-type": resourceType };
@@ -33,7 +35,13 @@ angular
             );
         }
 
-        $scope.load = function() {
+        $scope.select = function() {
+            $location.search('name', $scope.name);
+            $scope.loginModule = null;
+            load();
+        };
+
+        function load() {
             $scope.loginModules = [];
             if ($scope.name == null) {
                 $scope.resource = {};
@@ -114,7 +122,7 @@ angular
                 });
         };
 
-        $scope.select = function(loginModule) {
+        $scope.selectLoginModule = function(loginModule) {
             $log.debug(loginModule);
             $scope.loginModule = loginModule;
             $scope.loginModule['module-options'].x_usersProperties = management.getterSetterWithExpression('usersProperties');
@@ -122,7 +130,7 @@ angular
         };
 
         $scope.active = function(loginModule) {
-            return ($scope.loginModule ==  angular.isDefined(loginModule) ? 'active' : '');
+            return (angular.equals($scope.loginModule, loginModule) ? 'active' : '');
         };
 
         function create(name) {

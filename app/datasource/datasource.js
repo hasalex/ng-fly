@@ -7,20 +7,23 @@ angular
         $routeProvider
             .when('/datasource', {
                 templateUrl: 'datasource/datasource.html',
-                controller: 'DataSourceController'
+                controller: 'DataSourceController',
+                reloadOnSearch: false
             });
     }])
-    .controller('DataSourceController',
-                ['$scope', '$log', '$modal', 'management', 'modalService',
-                 function ($scope, $log, $modal, management, modalService) {
 
-        $scope.name = null;
+    .controller('DataSourceController',
+                ['$scope', '$log', '$routeParams', '$location', 'management', 'modalService',
+                 function ($scope, $log, $routeParams, $location, management, modalService) {
+
+        $scope.name = angular.isDefined($routeParams.name) ? $routeParams.name : null;
         $scope.resource = {};
 
         var rootAddress = [ { "subsystem": "datasources" } ];
         var resourceType = "data-source";
 
         list();
+        load();
 
         function list() {
             var attr = { "child-type": resourceType };
@@ -32,19 +35,10 @@ angular
             );
         }
 
-        $scope.load = function() {
-            if ($scope.name == null) {
-                $scope.resource = {};
-            } else {
-                management.invoke('read-resource', address()).then(
-                    function(data) {
-                        $log.debug(data);
-                        $scope.resource = data.result;
-                    },
-                    error
-                )
-            }
-        }
+        $scope.select = function() {
+            $location.search('name', $scope.name);
+            load();
+        };
 
         $scope.save = function(attr) {
             if ($scope.name == null) {
@@ -59,7 +53,7 @@ angular
                 },
                 error
             )
-        }
+        };
 
         $scope.reload = function() {
             management.invoke( "reload").then(
@@ -68,7 +62,7 @@ angular
                 },
                 error
             );
-        }
+        };
 
         $scope.remove = function() {
             if ($scope.name == null) {
@@ -87,11 +81,11 @@ angular
                     error(reason);
                 }
             )
-        }
+        };
 
         $scope.duplicate = function() {
             $scope.name = null;
-        }
+        };
 
         $scope.closeAlert = function() {
             $scope.error = null;
@@ -104,7 +98,22 @@ angular
                 });
         };
 
-        function create(name) {
+        function load() {
+            if ($scope.name == null) {
+                $scope.resource = {};
+            } else {
+                management.invoke('read-resource', address()).then(
+                    function (data) {
+                         $log.debug(data);
+                         $scope.resource = data.result;
+                     },
+                     error
+                 )
+             }
+         }
+
+
+         function create(name) {
             $scope.name = name;
             var data = {};
             data['enabled'] = $scope.resource['enabled'];

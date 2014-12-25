@@ -8,7 +8,7 @@
                         ng-model="name"
                         ng-model-options="{ updateOn: 'default' }"
                         ng-options="key for key in names"
-                        ng-change="load()">
+                        ng-change="select()">
                     <option value="">-- Select a Security Domain--</option>
                 </select>
             </div>
@@ -27,7 +27,7 @@
             <label class="col-sm-3 control-label">Login Modules</label>
             <div class="col-sm-6">
                 <ul class="list-group">
-                    <li ng-repeat="loginModule in loginModules" ng-click="select(loginModule)"
+                    <li ng-repeat="loginModule in loginModules" ng-click="selectLoginModule(loginModule)"
                         class="list-group-item" ng-class="active(loginModule)">{{loginModule.code}}</li>
                 </ul>
             </div>

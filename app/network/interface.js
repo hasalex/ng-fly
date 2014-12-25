@@ -7,21 +7,23 @@ angular
         $routeProvider
             .when('/interface', {
                 templateUrl: 'network/interface.html',
-                controller: 'InterfaceController'
+                controller: 'InterfaceController',
+                reloadOnSearch: false
             });
     }])
 
     .controller('InterfaceController',
-                ['$scope', '$log', '$modal', 'management', 'modalService',
-                 function ($scope, $log, $modal, management, modalService) {
+                ['$scope', '$log', '$routeParams', '$location', 'management', 'modalService',
+                 function ($scope, $log, $routeParams, $location, management, modalService) {
 
-        $scope.name = null;
+        $scope.name = angular.isDefined($routeParams.name) ? $routeParams.name : null;
         $scope.resource = {};
 
         var rootAddress = [ ];
         var resourceType = "interface";
 
         list();
+        load();
 
         function list() {
             var attr = { "child-type": resourceType };
@@ -33,7 +35,12 @@ angular
             );
         }
 
-        $scope.load = function() {
+        $scope.select = function() {
+            $location.search('name', $scope.name);
+            load();
+        };
+
+        function load() {
             if ($scope.name == null) {
                 $scope.resource = {};
             } else {
@@ -60,7 +67,7 @@ angular
                 },
                 error
             )
-        }
+        };
 
         $scope.reload = function() {
             management.invoke( 'reload').then(
@@ -69,7 +76,7 @@ angular
                 },
                 error
             );
-        }
+        };
 
         $scope.remove = function() {
             if ($scope.name== null) {
@@ -88,11 +95,11 @@ angular
                     error()
                 }
             )
-        }
+        };
 
         $scope.duplicate = function() {
             $scope.name = null;
-        }
+        };
 
         $scope.closeAlert = function() {
             $scope.error = null;
