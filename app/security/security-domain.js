@@ -125,8 +125,6 @@ angular
         $scope.selectLoginModule = function(loginModule) {
             $log.debug(loginModule);
             $scope.loginModule = loginModule;
-            $scope.loginModule['module-options'].x_usersProperties = management.getterSetterWithExpression('usersProperties');
-            $scope.loginModule['module-options'].x_rolesProperties = management.getterSetterWithExpression('rolesProperties');
         };
 
         $scope.active = function(loginModule) {

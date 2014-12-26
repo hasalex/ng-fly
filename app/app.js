@@ -6,6 +6,7 @@ angular
         [
             'ngRoute',
             'ui.bootstrap',
+            'directives',
             'services',
             'flyNg.ds',
             'flyNg.driver',

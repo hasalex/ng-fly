@@ -28,12 +28,12 @@ angular
             return deferred.promise;
         }
 
-
         function reason(data) {
             var result = processState(data);
             result.message = data["failure-description"];
             return result;
         }
+
         function processState(result) {
             if ( angular.isDefined(result['response-headers']) ) {
                 result.processState = result['response-headers']['process-state'];
@@ -43,29 +43,8 @@ angular
             return result;
         }
 
-        function getterSetterWithExpression(attr) {
-            $log.debug('getterSetterWithExpression for attr ' + attr);
-
-            return function(newValue) {
-                $log.debug(this);
-
-                if (angular.isDefined(newValue)) {
-                    this[attr] = newValue;
-                }
-                if ( angular.isDefined(this[attr].EXPRESSION_VALUE) ) {
-                    $log.debug(this[attr].EXPRESSION_VALUE);
-                    return this[attr].EXPRESSION_VALUE;
-                } else {
-                    $log.debug(this[attr]);
-                    return this[attr];
-                }
-            }
-        };
-
-
         return {
-            invoke: invoke,
-            getterSetterWithExpression: getterSetterWithExpression
+            invoke: invoke
         }
 
     }]);

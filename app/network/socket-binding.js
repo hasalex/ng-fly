@@ -47,7 +47,6 @@ angular
                 management.invoke('read-resource', address()).then(
                     function(data) {
                         $scope.resource = data.result;
-                        $scope.resource.xport = management.getterSetterWithExpression('port');
                     },
                     error
                 )
