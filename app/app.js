@@ -30,9 +30,9 @@ angular
 
         $scope.hasSubsystem = function (name) {
             return (resources.indexOf(name) >= 0);
-        }
+        };
 
         $scope.active = function (path) {
             return (path === $location.path() ? 'active' : '');
-        }
+        };
     }]);

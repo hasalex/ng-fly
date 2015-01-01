@@ -3,11 +3,11 @@
 angular
     .module('services', [])
 
-    .factory('management', ['$q', '$http', '$log', function($q, $http, $log){
+    .factory('management', ['$q', '$http', '$log', '$location', 'modalService', function($q, $http, $log, $location, modalService){
         this.name = null;
         this.names = null;
         this.resource = null;
-        this.error = null;
+        this.message = null;
         this.processState = null;
         this.rootAddress = null;
         this.resourceType = null;
@@ -19,7 +19,9 @@ angular
                 function(data) {
                     that.names = data.result;
                 },
-                error
+                function (reason) {
+                    that.error(reason);
+                }
             );
         }
 
@@ -33,7 +35,9 @@ angular
                         that.resource = data.result;
                         that.resource.address = that.address();
                     },
-                    error
+                    function (reason) {
+                        that.error(reason);
+                    }
                 )
             }
         }
@@ -43,16 +47,85 @@ angular
                 return;
             }
 
-            $log.debug('save attribute ' + attr + ':' + this.resource[attr]);
+            $log.debug('Saving attribute ' + attr + ':' + this.resource[attr]);
             var data = {"name": attr, "value": this.resource[attr]};
             var that = this;
             invoke("write-attribute", this.address(), data).then(
                 function (data) {
                     that.processState = data.processState;
                 },
-                error
+                function (reason) {
+                    that.error(reason);
+                }
             )
         }
+
+        function duplicate() {
+            this.name = null;
+        }
+
+        function select() {
+            $location.search('name', this.name);
+            this.load();
+        }
+
+        function reload() {
+            var that = this;
+            this.invoke( "reload").then(
+                function (data) {
+                    that.processState = data.processState;
+                },
+                function (reason) {
+                    that.error(reason);
+                }
+            );
+        }
+
+        function remove() {
+            if (this.name == null) {
+                this.resource = new Object();
+                return;
+            }
+
+            var that = this;
+            this.invoke("remove", this.address()).then(
+                function () {
+                    that.name = null;
+                    $location.search('name', null);
+                    that.list();
+                    that.load();
+                },
+                function (reason) {
+                    that.name = null;
+                    this.error(reason);
+                }
+            )
+        }
+
+        function create(name, data) {
+            this.name = name;
+            $location.search('name', this.name);
+
+            var that = this;
+            this.invoke("add", this.address(), data).then(
+                function (data) {
+                    that.list();
+                    that.load();
+                    that.processState = data.processState;
+                },
+                function (reason) {
+                    that.name = null;
+                    that.error(reason);
+                }
+            )
+        }
+
+        function openModal(callback) {
+            modalService.show().then(callback);
+        };
+
+
+
 
         function invoke(operation, address, args) {
             var deferred = $q.defer();
@@ -78,10 +151,14 @@ angular
         }
 
         function error(reason) {
-            this.error = reason.message;
+            this.message = reason.message;
             if ( angular.isDefined(reason.processState) ) {
                 this.processState = reason.processState;
             }
+        }
+
+        function closeAlert() {
+            this.message = null;
         }
 
         function reason(data) {
@@ -111,7 +188,15 @@ angular
             save: save,
             list: list,
             load: load,
-            address: address
+            reload: reload,
+            duplicate: duplicate,
+            select: select,
+            remove: remove,
+            create: create,
+            closeAlert: closeAlert,
+            address: address,
+            error: error,
+            openModal: openModal
         }
 
     }]);

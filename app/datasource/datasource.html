@@ -8,7 +8,7 @@
                         ng-model="management.name"
                         ng-model-options="{ updateOn: 'default' }"
                         ng-options="key for key in management.names"
-                        ng-change="select()">
+                        ng-change="management.select()">
                     <option value="">-- Select a DataSource--</option>
                 </select>
             </div>
@@ -78,20 +78,20 @@
             <div class="col-sm-6">
                 <button class="btn btn-primary" id="buttonReload"
                         ng-show="management.processState === 'reload-required'"
-                        ng-click="reload()">Reload</button>
+                        ng-click="management.reload()">Reload</button>
                 <button class="btn btn-primary" id="buttonCreate"
                         ng-hide="management.name"
-                        ng-click="open()">Create</button>
+                        ng-click="management.openModal(create)">Create</button>
                 <button class="btn btn-primary" id="buttonDuplicate"
                         ng-show="management.name"
-                        ng-click="duplicate()">Duplicate</button>
+                        ng-click="management.duplicate()">Duplicate</button>
                 <button class="btn btn-primary" id="buttonRemove"
-                        ng-click="remove()">Remove</button>
+                        ng-click="management.remove()">Remove</button>
             </div>
         </div>
 
         <div class="col-sm-8">
-            <alert type="danger" close="closeAlert()" ng-show="management.error" >{{management.error}}</alert>
+            <alert type="danger" close="management.closeAlert()" ng-show="management.message" >{{management.message}}</alert>
         </div>
 
     </form>
