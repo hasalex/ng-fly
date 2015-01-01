@@ -12,9 +12,7 @@ angular
             });
     }])
 
-    .controller('DataSourceController',
-                ['$scope', '$log', '$routeParams', '$location', 'management', 'modalService',
-                 function ($scope, $log, $routeParams, $location, management, modalService) {
+    .controller('DataSourceController', ['$scope', '$routeParams', 'management', function ($scope, $routeParams, management) {
 
         $scope.management = management;
         management.name = angular.isDefined($routeParams.name) ? $routeParams.name : null;
