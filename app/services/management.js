@@ -122,10 +122,7 @@ angular
 
         function openModal(callback) {
             modalService.show().then(callback);
-        };
-
-
-
+        }
 
         function invoke(operation, address, args) {
             var deferred = $q.defer();
