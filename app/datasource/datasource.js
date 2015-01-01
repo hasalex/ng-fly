@@ -12,10 +12,10 @@ angular
             });
     }])
 
-    .controller('DataSourceController', ['$scope', '$routeParams', 'management', function ($scope, $routeParams, management) {
+    .controller('DataSourceController', ['$scope', 'management', function ($scope, management) {
 
         $scope.management = management;
-        management.name = angular.isDefined($routeParams.name) ? $routeParams.name : null;
+        management.initName();
         management.rootAddress = [ { "subsystem": "datasources" } ];
         management.resourceType = "data-source";
 

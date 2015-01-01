@@ -12,12 +12,10 @@ angular
             });
     }])
 
-    .controller('DriverController',
-                ['$scope', '$log', '$routeParams', '$location', 'management',
-                 function ($scope, $log, $routeParams, $location, management) {
+    .controller('DriverController', ['$scope', 'management', function ($scope, management) {
 
         $scope.management = management;
-        management.name = angular.isDefined($routeParams.name) ? $routeParams.name : null;
+        management.initName();
         management.rootAddress = [ { "subsystem": "datasources" } ];
         management.resourceType = "jdbc-driver";
 

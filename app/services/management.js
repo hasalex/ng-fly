@@ -3,7 +3,7 @@
 angular
     .module('services', [])
 
-    .factory('management', ['$q', '$http', '$log', '$location', 'modalService', function($q, $http, $log, $location, modalService){
+    .factory('management', ['$q', '$http', '$log', '$location', '$routeParams', 'modalService', function($q, $http, $log, $location, $routeParams, modalService){
         this.name = null;
         this.names = null;
         this.resource = null;
@@ -183,6 +183,10 @@ angular
             return address;
         }
 
+        function initName() {
+            this.name = angular.isDefined($routeParams.name) ? $routeParams.name : null;
+        }
+
         return {
             invoke: invoke,
             save: save,
@@ -196,7 +200,8 @@ angular
             closeAlert: closeAlert,
             address: address,
             error: error,
-            openModal: openModal
+            openModal: openModal,
+            initName: initName
         }
 
     }]);

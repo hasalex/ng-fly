@@ -12,10 +12,10 @@ angular
             });
     }])
 
-    .controller('InterfaceController', ['$scope', '$routeParams', 'management', function ($scope, $routeParams, management) {
+    .controller('InterfaceController', ['$scope', 'management', function ($scope, management) {
 
         $scope.management = management;
-        management.name = angular.isDefined($routeParams.name) ? $routeParams.name : null;
+        management.initName();
         management.rootAddress = [  ];
         management.resourceType = "interface";
 
