@@ -56,16 +56,27 @@ angular
             }
 
             $log.debug('Saving attribute ' + attr + ':' + data[attr]);
-            var data = {"name": attr, "value": data[attr]};
             var that = this;
-            return invoke("write-attribute", address, data).then(
-                function (data) {
-                    that.processState = data.processState;
-                },
-                function (reason) {
-                    that.error(reason);
-                }
-            )
+            if (data[attr]) {
+                return invoke("write-attribute", address, {"name": attr, "value": data[attr]}).then(
+                    function (data) {
+                        that.processState = data.processState;
+                    },
+                    function (reason) {
+                        that.error(reason);
+                    }
+                )
+            } else {
+                invoke("undefine-attribute", address, {"name": attr}).then(
+                    function (data) {
+                        that.processState = data.processState;
+                    },
+                    function (reason) {
+                        that.error(reason);
+                    }
+                )
+            }
+
         }
 
         function duplicate() {

@@ -36,6 +36,12 @@ angular
             management.invoke('read-resource', [ {"subsystem": "security"}, {"security-domain": management.name}, {"authentication": "classic"} ]).then(
                 function(data) {
                     $scope.loginModules = data.result['login-modules'];
+                    if ($scope.loginModules.length > 0) {
+                        $scope.loginModule = $scope.loginModules[0];
+                    }
+                },
+                function(reason) {
+                    $scope.loginModules = null;
                 }
             )
         }
