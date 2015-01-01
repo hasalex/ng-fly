@@ -5,9 +5,9 @@
             <label class="col-sm-3 control-label">DataSource</label>
             <div class="col-sm-6">
                 <select id="inputName" class="form-control"
-                        ng-model="name"
+                        ng-model="management.name"
                         ng-model-options="{ updateOn: 'default' }"
-                        ng-options="key for key in names"
+                        ng-options="key for key in management.names"
                         ng-change="select()">
                     <option value="">-- Select a DataSource--</option>
                 </select>
@@ -20,9 +20,9 @@
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" id="inputEnabled"
-                               ng-model="resource.enabled"
+                               ng-model="management.resource.enabled"
                                ng-model-options="{ updateOn: 'default' }"
-                               ng-change="save('enabled')">
+                               ng-change="management.save('enabled')">
                     </label>
                 </div>
             </div>
@@ -32,8 +32,8 @@
             <label for="inputJndiName" class="col-sm-3 control-label">Jndi Name</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" id="inputJndiName"
-                       ng-model="resource['jndi-name']"
-                       ng-change="save('jndi-name')">
+                       ng-model="management.resource['jndi-name']"
+                       ng-change="management.save('jndi-name')">
             </div>
         </div>
 
@@ -41,8 +41,8 @@
             <label for="inputDriver" class="col-sm-3 control-label">Driver</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" id="inputDriver"
-                       ng-model="resource['driver-name']"
-                       ng-change="save('driver-name')">
+                       ng-model="management.resource['driver-name']"
+                       ng-change="management.save('driver-name')">
             </div>
         </div>
 
@@ -50,8 +50,8 @@
             <label for="inputConnectionUrl" class="col-sm-3 control-label">Connection URL</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" id="inputConnectionUrl"
-                       ng-model="resource['connection-url']"
-                       ng-change="save('connection-url')">
+                       ng-model="management.resource['connection-url']"
+                       ng-change="management.save('connection-url')">
             </div>
         </div>
 
@@ -59,8 +59,8 @@
             <label for="inputUserName" class="col-sm-3 control-label">User Name</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" id="inputUserName"
-                       ng-model="resource['user-name']"
-                       ng-change="save('user-name')">
+                       ng-model="management.resource['user-name']"
+                       ng-change="management.save('user-name')">
             </div>
         </div>
 
@@ -68,8 +68,8 @@
             <label for="inputPassword" class="col-sm-3 control-label">Password</label>
             <div class="col-sm-6">
                 <input type="password" class="form-control" id="inputPassword"
-                       ng-model="resource.password"
-                       ng-change="save('password')">
+                       ng-model="management.resource.password"
+                       ng-change="management.save('password')">
             </div>
         </div>
 
@@ -77,13 +77,13 @@
             <div class="col-sm-3"></div>
             <div class="col-sm-6">
                 <button class="btn btn-primary" id="buttonReload"
-                        ng-show="processState == 'reload-required'"
+                        ng-show="management.processState === 'reload-required'"
                         ng-click="reload()">Reload</button>
                 <button class="btn btn-primary" id="buttonCreate"
-                        ng-hide="name"
+                        ng-hide="management.name"
                         ng-click="open()">Create</button>
                 <button class="btn btn-primary" id="buttonDuplicate"
-                        ng-show="name"
+                        ng-show="management.name"
                         ng-click="duplicate()">Duplicate</button>
                 <button class="btn btn-primary" id="buttonRemove"
                         ng-click="remove()">Remove</button>
@@ -91,7 +91,7 @@
         </div>
 
         <div class="col-sm-8">
-            <alert type="danger" close="closeAlert()" ng-show="error" >{{error}}</alert>
+            <alert type="danger" close="closeAlert()" ng-show="management.error" >{{management.error}}</alert>
         </div>
 
     </form>

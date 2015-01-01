@@ -16,75 +16,51 @@ angular
                 ['$scope', '$log', '$routeParams', '$location', 'management', 'modalService',
                  function ($scope, $log, $routeParams, $location, management, modalService) {
 
-        $scope.name = angular.isDefined($routeParams.name) ? $routeParams.name : null;
-        $scope.resource = {};
+        $scope.management = management;
+        management.name = angular.isDefined($routeParams.name) ? $routeParams.name : null;
+        management.rootAddress = [ { "subsystem": "datasources" } ];
+        management.resourceType = "data-source";
 
-        var rootAddress = [ { "subsystem": "datasources" } ];
-        var resourceType = "data-source";
+        $scope.resource = new Object();
 
-        list();
-        load();
-
-        function list() {
-            var attr = { "child-type": resourceType };
-            management.invoke('read-children-names', rootAddress, attr).then(
-                function(data) {
-                    $scope.names = data.result;
-                },
-                error
-            );
-        }
+        management.list();
+        management.load();
 
         $scope.select = function() {
-            $location.search('name', $scope.name);
-            load();
-        };
-
-        $scope.save = function(attr) {
-            if ($scope.name == null) {
-                return;
-            }
-
-            var data = {"name": attr, "value": $scope.resource[attr]};
-
-            management.invoke("write-attribute", address(), data).then(
-                function (data) {
-                    $scope.processState = data.processState;
-                },
-                error
-            )
+            $location.search('name', management.name);
+            management.load();
         };
 
         $scope.reload = function() {
             management.invoke( "reload").then(
                 function (data) {
-                    $scope.processState = data.processState;
+                    management.processState = data.processState;
                 },
                 error
             );
         };
 
         $scope.remove = function() {
-            if ($scope.name == null) {
+            if (management.name == null) {
                 $scope.resource = {};
                 return;
             }
 
             management.invoke("remove", address()).then(
                 function () {
-                    $scope.name = null
+                    management.name = null;
                     list();
-                    $scope.load();
+                    management.load();
                 },
                 function (reason) {
-                    $scope.name = null;
+                    management.name = null;
                     error(reason);
                 }
             )
         };
 
         $scope.duplicate = function() {
-            $scope.name = null;
+            $scope.management.name = null;
         };
 
         $scope.closeAlert = function() {
@@ -98,23 +74,8 @@ angular
                 });
         };
 
-        function load() {
-            if ($scope.name == null) {
-                $scope.resource = {};
-            } else {
-                management.invoke('read-resource', address()).then(
-                    function (data) {
-                         $log.debug(data);
-                         $scope.resource = data.result;
-                     },
-                     error
-                 )
-             }
-         }
-
-
-         function create(name) {
-            $scope.name = name;
+        function create(name) {
+            management.name = name;
             var data = {};
             data['enabled'] = $scope.resource['enabled'];
             data['jndi-name'] = $scope.resource['jndi-name'];
@@ -124,29 +85,29 @@ angular
             data['password'] = $scope.resource['password'];
 
             management.invoke("add", address(), data).then(
-             function (data) {
-                 list();
-                 $scope.load();
-                 $scope.processState = data.processState;
-             },
-            function (reason) {
-                $scope.name = null;
-                error(reason);
-            }
+                 function (data) {
+                     list();
+                     management.load();
+                     management.processState = data.processState;
+                 },
+                function (reason) {
+                    management.name = null;
+                    error(reason);
+                }
             )
         }
 
         function error(reason) {
             $scope.error = reason.message;
             if ( angular.isDefined(reason.processState) ) {
-                $scope.processState = reason.processState;
+                management.processState = reason.processState;
             }
         }
 
         function address() {
-            var address = rootAddress.slice(0);
+            var address = management.rootAddress.slice(0);
             var resource = {};
-            resource[resourceType] = $scope.name;
+            resource[management.resourceType] = management.name;
             address.push( resource );
             return address;
         }
