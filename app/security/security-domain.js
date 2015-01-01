@@ -12,9 +12,7 @@ angular
             });
     }])
 
-    .controller('SecurityDomainController',
-                ['$scope', '$log', '$routeParams', '$location', 'management',
-                    function ($scope, $log, $routeParams, $location, management) {
+    .controller('SecurityDomainController', ['$scope', '$log', '$location', 'management', function ($scope, $log, $location, management) {
 
         $scope.management = management;
         management.initName();
@@ -26,23 +24,12 @@ angular
 
         $scope.select = function() {
             $scope.loginModule = null;
-            $location.search('name', this.name);
+            $location.search('name', management.name);
             load();
         };
 
         function load() {
-            $scope.loginModules = [];
-            if (management.name == null) {
-                management.resource = {};
-            } else {
-                management.invoke('read-resource', management.address()).then(
-                    function(data) {
-                        management.resource = data.result;
-                        loadLoginModule();
-                    },
-                    management.error
-                )
-            }
+            management.load().then(loadLoginModule);
         }
 
         function loadLoginModule() {
@@ -54,7 +41,6 @@ angular
         }
 
         $scope.selectLoginModule = function(loginModule) {
-            $log.debug(loginModule);
             $scope.loginModule = loginModule;
         };
 
@@ -65,5 +51,22 @@ angular
         $scope.create = function(result) {
             management.create(result.name, management.resource);
         };
+
+        $scope.selectFlag = function(value) {
+            $scope.loginModule.flag = value;
+            $scope.saveLoginModuleAttr('flag');
+        }
+
+        $scope.saveLoginModuleAttr = function(attr) {
+            management.save(attr, $scope.loginModule, $scope.loginModuleAddress());
+        }
+
+        $scope.loginModuleAddress = function() {
+            var address = [{"subsystem": "security"},
+                {"security-domain": management.name},
+                {"authentication": "classic"},
+                {"login-module": $scope.loginModule.code}]
+            return address;
+        }
 
     }]);

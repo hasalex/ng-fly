@@ -15,7 +15,7 @@ angular
         function list() {
             var attr = { "child-type": this.resourceType };
             var that = this;
-            invoke('read-children-names', this.rootAddress, attr).then(
+            return invoke('read-children-names', this.rootAddress, attr).then(
                 function(data) {
                     that.names = data.result;
                 },
@@ -27,10 +27,11 @@ angular
 
         function load() {
             if (this.name == null) {
-                this.resource = new Object();
+                this.resource = {};
+                return $q.defer().promise;
             } else {
                 var that = this;
-                this.invoke('read-resource', this.address()).then(
+                return this.invoke('read-resource', this.address()).then(
                     function (data) {
                         that.resource = data.result;
                         that.resource.address = that.address();
@@ -42,15 +43,22 @@ angular
             }
         }
 
-        function save(attr) {
+        function save(attr, data, address) {
             if (this.name == null) {
-                return;
+                return $q.defer().promise;
             }
 
-            $log.debug('Saving attribute ' + attr + ':' + this.resource[attr]);
-            var data = {"name": attr, "value": this.resource[attr]};
+            if (angular.isUndefined(data)) {
+                data = this.resource;
+            }
+            if (angular.isUndefined(address)) {
+                address = this.address();
+            }
+
+            $log.debug('Saving attribute ' + attr + ':' + data[attr]);
+            var data = {"name": attr, "value": data[attr]};
             var that = this;
-            invoke("write-attribute", this.address(), data).then(
+            return invoke("write-attribute", address, data).then(
                 function (data) {
                     that.processState = data.processState;
                 },
@@ -71,7 +79,7 @@ angular
 
         function reload() {
             var that = this;
-            this.invoke( "reload").then(
+            return this.invoke( "reload").then(
                 function (data) {
                     that.processState = data.processState;
                 },
@@ -83,12 +91,12 @@ angular
 
         function remove() {
             if (this.name == null) {
-                this.resource = new Object();
-                return;
+                this.resource = {};
+                return $q.defer().promise;
             }
 
             var that = this;
-            this.invoke("remove", this.address()).then(
+            return this.invoke('remove', this.address()).then(
                 function () {
                     that.name = null;
                     $location.search('name', null);
@@ -107,7 +115,7 @@ angular
             $location.search('name', this.name);
 
             var that = this;
-            this.invoke("add", this.address(), data).then(
+            return this.invoke('add', this.address(), data).then(
                 function (data) {
                     that.list();
                     that.load();

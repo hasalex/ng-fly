@@ -36,21 +36,13 @@
         <div class="panel panel-default" ng-if="loginModule">
             <div class="panel-body">
                 <div class="form-group">
-                    <label for="inputLoginModuleCode" class="col-sm-3 control-label">Code</label>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control" id="inputLoginModuleCode"
-                               ng-model="loginModule.code" >
-                    </div>
-                </div>
-
-                <div class="form-group">
                     <label class="col-sm-3 control-label">Flag</label>
                     <div class="col-sm-6">
                         <div class="btn-group">
-                            <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'required'">required</label>
-                            <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'requisite'">requisite</label>
-                            <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'sufficient'">sufficient</label>
-                            <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'optional'">optional</label>
+                            <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'required'" ng-click="selectFlag('required')">required</label>
+                            <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'requisite'" ng-click="selectFlag('requisite')">requisite</label>
+                            <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'sufficient'" ng-click="selectFlag('sufficient')">sufficient</label>
+                            <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'optional'" ng-click="selectFlag('optional')">optional</label>
                         </div>
                     </div>
                 </div>
@@ -59,30 +51,19 @@
                     <label for="inputLoginModuleModule" class="col-sm-3 control-label">Module</label>
                     <div class="col-sm-6">
                         <input type="text" class="form-control" id="inputLoginModuleModule"
-                               ng-model="loginModule.module" >
+                               ng-model="loginModule.module" ng-change="saveLoginModuleAttr('module')">
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Module Options</label>
+                <div class="form-group" ng-repeat="(key, value) in loginModule['module-options']">
+                    <label class="col-sm-3 control-label"><span ng-if="$first">Module Option</span></label>
                     <div class="col-sm-2">
                         <input type="text" class="form-control"
-                               ng-model="'usersProperties'" >
+                               ng-model="key" ng-readonly="true">
                     </div>
                     <div class="col-sm-4">
                         <input type="text" class="form-control"
-                               ng-model="loginModule['module-options'].usersProperties" wf-expression>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label"></label>
-                    <div class="col-sm-2">
-                        <input type="text" class="form-control"
-                               ng-model="'rolesProperties'" >
-                    </div>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control"
-                               ng-model="loginModule['module-options'].rolesProperties" wf-expression>
+                               ng-model="value" wf-expression  ng-readonly="true">
                     </div>
                 </div>
             </div>
