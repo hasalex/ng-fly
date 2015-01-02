@@ -1,0 +1,10 @@
+<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ng-controller="MenuController">
+    <ul class="nav navbar-nav">
+        <li ng-if="hasSubsystem('datasources')" ng-class="active('/datasource')"><a href="#/datasource">DataSources</a></li>
+        <li ng-if="hasSubsystem('datasources')" ng-class="active('/driver')"><a href="#/driver">Drivers</a></li>
+        <li ng-class="active('/interface')"><a href="#/interface">Interfaces</a></li>
+        <li ng-class="active('/socket-binding')"><a href="#/socket-binding">Socket Bindings</a></li>
+        <li ng-if="hasSubsystem('security')" ng-class="active('/security-domain')"><a href="#/security-domain">Security Domains</a></li>
+        <li ng-if="hasSubsystem('messaging')" ng-class="active('/xxx')"><a href="#/">JMS Destinations (TBD)</a></li>
+    </ul>
+</div><!-- /.navbar-collapse -->

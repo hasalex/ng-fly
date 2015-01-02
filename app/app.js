@@ -11,7 +11,8 @@ angular
             'flyNg.ds',
             'flyNg.driver',
             'flyNg.network',
-            'flyNg.security'
+            'flyNg.security',
+            'flyNg.server'
         ]
     ).
 

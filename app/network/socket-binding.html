@@ -1,48 +1,43 @@
-<div>
-    <form class="form-horizontal" role="form" ng-model-options="{ updateOn: 'blur', getterSetter: true }">
+<form class="form-horizontal" role="form" ng-model-options="{ updateOn: 'blur', getterSetter: true }">
 
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Socket Binding</label>
-            <div class="col-sm-6">
-                <select id="inputName" class="form-control"
-                        ng-model="management.name"
-                        ng-model-options="{ updateOn: 'default' }"
-                        ng-options="key for key in management.names"
-                        ng-change="management.select()">
-                    <option value="">-- Select a Socket Binding--</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="inputPort" class="col-sm-3 control-label">Port</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" id="inputPort"
-                       ng-model="management.resource.port" wf-expression
-                       ng-change="management.save('port')">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-sm-3"></div>
-            <div class="col-sm-6">
-                <button class="btn btn-primary" id="buttonReload"
-                        ng-show="management.processState == 'reload-required'"
-                        ng-click="management.reload()">Reload</button>
-                <button class="btn btn-primary" id="buttonCreate"
-                        ng-hide="management.name"
-                        ng-click="management.openModal(create)">Create</button>
-                <button class="btn btn-primary" id="buttonDuplicate"
-                        ng-show="management.name"
-                        ng-click="management.duplicate()">Duplicate</button>
-                <button class="btn btn-primary" id="buttonRemove"
-                        ng-click="management.remove()">Remove</button>
-            </div>
-        </div>
-
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Socket Binding</label>
         <div class="col-sm-9">
-            <alert type="danger" close="management.closeAlert()" ng-show="management.message" >{{management.message}}</alert>
+            <select id="inputName" class="form-control"
+                    ng-model="management.name"
+                    ng-model-options="{ updateOn: 'default' }"
+                    ng-options="key for key in management.names"
+                    ng-change="management.select()">
+                <option value="">-- Select a Socket Binding--</option>
+            </select>
         </div>
+    </div>
 
-    </form>
-</div>
+    <div class="form-group">
+        <label for="inputPort" class="col-sm-3 control-label">Port</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputPort"
+                   ng-model="management.resource.port" wf-expression
+                   ng-change="management.save('port')">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-9">
+            <button class="btn btn-primary" id="buttonCreate"
+                    ng-hide="management.name"
+                    ng-click="management.openModal(create)">Create</button>
+            <button class="btn btn-primary" id="buttonDuplicate"
+                    ng-show="management.name"
+                    ng-click="management.duplicate()">Duplicate</button>
+            <button class="btn btn-primary" id="buttonRemove"
+                    ng-click="management.remove()">Remove</button>
+        </div>
+    </div>
+
+    <div class="col-sm-9">
+        <alert type="danger" close="management.closeAlert()" ng-show="management.message" >{{management.message}}</alert>
+    </div>
+
+</form>

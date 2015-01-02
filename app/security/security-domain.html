@@ -1,107 +1,102 @@
-<div>
-    <form class="form-horizontal" role="form" ng-model-options="{ updateOn: 'blur', getterSetter: true }">
+<form class="form-horizontal" role="form" ng-model-options="{ updateOn: 'blur', getterSetter: true }">
 
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Security Domain</label>
-            <div class="col-sm-6">
-                <select id="inputName" class="form-control"
-                        ng-model="management.name"
-                        ng-model-options="{ updateOn: 'default' }"
-                        ng-options="key for key in management.names"
-                        ng-change="select()">
-                    <option value="">-- Select a Security Domain--</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="inputCacheType" class="col-sm-3 control-label">Cache Type</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" id="inputCacheType"
-                       ng-model="management.resource['cache-type']"
-                       ng-change="management.save('cache-type')" >
-            </div>
-        </div>
-
-        <div class="form-group" ng-show="management.name">
-            <label class="col-sm-3 control-label">Login Modules</label>
-            <div class="col-sm-6 btn-group btn-group-vertical" role="group">
-                <button type="button" ng-repeat="loginModule in loginModuleNames" ng-click="selectLoginModule(loginModule)"
-                       class="btn btn-default" ng-class="active(loginModule)" style="width: 100%">{{loginModule}}</button>
-                <div style="margin-top: 2px">
-                    <button type="button" class="btn btn-primary btn-sm" ng-click="addLoginModule()">+</button>
-                    <button type="button" class="btn btn-primary btn-sm" ng-click="removeLoginModule()" ng-show="loginModuleNames.length > 0">-</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="panel panel-default" ng-if="loginModule">
-            <div class="panel-body">
-                <div class="form-group">
-                    <label for="inputLoginModuleCode" class="col-sm-3 control-label">Code</label>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control" id="inputLoginModuleCode"
-                               ng-model="loginModule.code" ng-change="saveLoginModuleAttr('code')">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Flag</label>
-                    <div class="col-sm-6">
-                        <div class="btn-group">
-                            <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'required'" ng-click="selectFlag('required')">required</label>
-                            <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'requisite'" ng-click="selectFlag('requisite')">requisite</label>
-                            <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'sufficient'" ng-click="selectFlag('sufficient')">sufficient</label>
-                            <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'optional'" ng-click="selectFlag('optional')">optional</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="inputLoginModuleModule" class="col-sm-3 control-label">Module</label>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control" id="inputLoginModuleModule"
-                               ng-model="loginModule.module" ng-change="saveLoginModuleAttr('module')">
-                    </div>
-                </div>
-
-                <div class="form-group" ng-repeat="obj in moduleOptions">
-                    <label class="col-sm-3 control-label"><span ng-if="$first">Module Options</span></label>
-                    <div class="col-sm-2">
-                        <input type="text" class="form-control"
-                               ng-model="obj.key" ng-readonly="false" ng-change="saveModuleOptions()">
-                    </div>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control"
-                               ng-model="obj.value" wf-expression  ng-readonly="false" ng-change="saveModuleOptions()">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-sm-3"></div>
-            <div class="col-sm-6">
-                <button class="btn btn-primary" id="buttonReload"
-                        ng-show="management.processState == 'reload-required'"
-                        ng-click="management.reload()">Reload</button>
-                <button class="btn btn-primary" id="buttonCreate"
-                        ng-hide="management.name"
-                        ng-click="management.openModal(create)">Create</button>
-                <button class="btn btn-primary" id="buttonDuplicate"
-                        ng-show="management.name"
-                        ng-click="management.duplicate()">Duplicate</button>
-                <button class="btn btn-primary" id="buttonRemove"
-                        ng-click="remove()">Remove</button>
-                <button class="btn btn-primary" id="buttonCreateLoginModule"
-                        ng-show="loginModule != null && loginModuleName == null"
-                        ng-click="createLoginModule()">Create Login Module</button>
-            </div>
-        </div>
-
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Security Domain</label>
         <div class="col-sm-9">
-            <alert type="danger" close="management.closeAlert()" ng-show="management.message" >{{management.message}}</alert>
+            <select id="inputName" class="form-control"
+                    ng-model="management.name"
+                    ng-model-options="{ updateOn: 'default' }"
+                    ng-options="key for key in management.names"
+                    ng-change="select()">
+                <option value="">-- Select a Security Domain--</option>
+            </select>
         </div>
+    </div>
 
-    </form>
-</div>
+    <div class="form-group">
+        <label for="inputCacheType" class="col-sm-3 control-label">Cache Type</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputCacheType"
+                   ng-model="management.resource['cache-type']"
+                   ng-change="management.save('cache-type')" >
+        </div>
+    </div>
+
+    <div class="form-group" ng-show="management.name">
+        <label class="col-sm-3 control-label">Login Modules</label>
+        <div class="col-sm-9 btn-group btn-group-vertical" role="group">
+            <button type="button" ng-repeat="loginModule in loginModuleNames" ng-click="selectLoginModule(loginModule)"
+                   class="btn btn-default" ng-class="active(loginModule)" style="width: 100%">{{loginModule}}</button>
+            <div style="margin-top: 2px">
+                <button type="button" class="btn btn-primary btn-sm" ng-click="addLoginModule()">+</button>
+                <button type="button" class="btn btn-primary btn-sm" ng-click="removeLoginModule()" ng-show="loginModuleNames.length > 0">-</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default" ng-if="loginModule">
+        <div class="panel-body">
+            <div class="form-group">
+                <label for="inputLoginModuleCode" class="col-sm-3 control-label">Code</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputLoginModuleCode"
+                           ng-model="loginModule.code" ng-change="saveLoginModuleAttr('code')">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Flag</label>
+                <div class="col-sm-9">
+                    <div class="btn-group">
+                        <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'required'" ng-click="selectFlag('required')">required</label>
+                        <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'requisite'" ng-click="selectFlag('requisite')">requisite</label>
+                        <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'sufficient'" ng-click="selectFlag('sufficient')">sufficient</label>
+                        <label class="btn btn-default" ng-model="loginModule.flag" btn-radio="'optional'" ng-click="selectFlag('optional')">optional</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputLoginModuleModule" class="col-sm-3 control-label">Module</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputLoginModuleModule"
+                           ng-model="loginModule.module" ng-change="saveLoginModuleAttr('module')">
+                </div>
+            </div>
+
+            <div class="form-group" ng-repeat="obj in moduleOptions">
+                <label class="col-sm-3 control-label"><span ng-if="$first">Module Options</span></label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control"
+                           ng-model="obj.key" ng-readonly="false" ng-change="saveModuleOptions()">
+                </div>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control"
+                           ng-model="obj.value" wf-expression  ng-readonly="false" ng-change="saveModuleOptions()">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-9">
+            <button class="btn btn-primary" id="buttonCreate"
+                    ng-hide="management.name"
+                    ng-click="management.openModal(create)">Create</button>
+            <button class="btn btn-primary" id="buttonDuplicate"
+                    ng-show="management.name"
+                    ng-click="management.duplicate()">Duplicate</button>
+            <button class="btn btn-primary" id="buttonRemove"
+                    ng-click="remove()">Remove</button>
+            <button class="btn btn-primary" id="buttonCreateLoginModule"
+                    ng-show="loginModule != null && loginModuleName == null"
+                    ng-click="createLoginModule()">Create Login Module</button>
+        </div>
+    </div>
+
+    <div class="col-sm-12">
+        <alert type="danger" close="management.closeAlert()" ng-show="management.message" >{{management.message}}</alert>
+    </div>
+
+</form>

@@ -1,0 +1,26 @@
+<form class="" role="form" ng-model-options="{ updateOn: 'blur', getterSetter: true }"
+      ng-controller="ServerController">
+
+    <div class="form-group">
+        <label class="control-label" for="inputUrl">URL</label>
+        <div class="">
+            <input type="text" class="form-control" id="inputUrl"
+                   ng-model="management.server.url">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label" for="inputProcessState">State</label>
+        <div class="">
+            <input type="text" class="form-control" id="inputProcessState"
+                   ng-model="management.processState" readonly>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <button class="btn btn-primary" id="buttonReload"
+                ng-show="management.processState == 'reload-required'"
+                ng-click="management.reload()">Reload</button>
+    </div>
+
+</form>

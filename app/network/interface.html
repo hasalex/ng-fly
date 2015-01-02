@@ -1,50 +1,45 @@
-<div>
-    <form class="form-horizontal" role="form" ng-model-options="{ updateOn: 'blur', getterSetter: true }">
+<form class="form-horizontal" role="form" ng-model-options="{ updateOn: 'blur', getterSetter: true }">
 
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Interface</label>
-            <div class="col-sm-6">
-                <select id="inputName" class="form-control"
-                        ng-model="management.name"
-                        ng-model-options="{ updateOn: 'default' }"
-                        ng-options="key for key in management.names"
-                        ng-change="select()">
-                    <option value="">-- Select an Interface--</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="inputInetAddress" class="col-sm-3 control-label">INET Address</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" id="inputInetAddress"
-                       ng-model="management.resource['inet-address']" wf-expression
-                       ng-change="management.save('inet-address')">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-sm-3"></div>
-            <div class="col-sm-6">
-                <button class="btn btn-primary" id="buttonReload"
-                        ng-show="management.processState == 'reload-required'"
-                        ng-click="management.reload()">Reload</button>
-<!--
-                <button class="btn btn-primary" id="buttonCreate"
-                        ng-hide="management.name"
-                        ng-click="management.openModal(create)">Create</button>
-                <button class="btn btn-primary" id="buttonDuplicate"
-                        ng-show="management.name"
-                        ng-click="management.duplicate()">Duplicate</button>
-  -->
-                <button class="btn btn-primary" id="buttonRemove"
-                        ng-click="management.remove()">Remove</button>
-            </div>
-        </div>
-
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Interface</label>
         <div class="col-sm-9">
-            <alert type="danger" close="management.closeAlert()" ng-show="management.message" >{{message}}</alert>
+            <select id="inputName" class="form-control"
+                    ng-model="management.name"
+                    ng-model-options="{ updateOn: 'default' }"
+                    ng-options="key for key in management.names"
+                    ng-change="management.select()">
+                <option value="">-- Select an Interface--</option>
+            </select>
         </div>
+    </div>
 
-    </form>
-</div>
+    <div class="form-group">
+        <label for="inputInetAddress" class="col-sm-3 control-label">INET Address</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputInetAddress"
+                   ng-model="management.resource['inet-address']" wf-expression
+                   ng-change="management.save('inet-address')">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-9">
+<!--
+            <button class="btn btn-primary" id="buttonCreate"
+                    ng-hide="management.name"
+                    ng-click="management.openModal(create)">Create</button>
+            <button class="btn btn-primary" id="buttonDuplicate"
+                    ng-show="management.name"
+                    ng-click="management.duplicate()">Duplicate</button>
+-->
+            <button class="btn btn-primary" id="buttonRemove"
+                    ng-click="management.remove()">Remove</button>
+        </div>
+    </div>
+
+    <div class="col-sm-9">
+        <alert type="danger" close="management.closeAlert()" ng-show="management.message" >{{message}}</alert>
+    </div>
+</form>
+

@@ -1,98 +1,93 @@
-<div>
-    <form class="form-horizontal" role="form" ng-model-options="{ updateOn: 'blur' }">
+<form class="form-horizontal" role="form" ng-model-options="{ updateOn: 'blur' }">
 
-        <div class="form-group">
-            <label class="col-sm-3 control-label">DataSource</label>
-            <div class="col-sm-6">
-                <select id="inputName" class="form-control"
-                        ng-model="management.name"
-                        ng-model-options="{ updateOn: 'default' }"
-                        ng-options="key for key in management.names"
-                        ng-change="management.select()">
-                    <option value="">-- Select a DataSource--</option>
-                </select>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">DataSource</label>
+        <div class="col-sm-9">
+            <select id="inputName" class="form-control"
+                    ng-model="management.name"
+                    ng-model-options="{ updateOn: 'default' }"
+                    ng-options="key for key in management.names"
+                    ng-change="management.select()">
+                <option value="">-- Select a DataSource--</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="inputEnabled" class="col-sm-3 control-label">Enabled</label>
+        <div class="col-sm-9">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="inputEnabled"
+                           ng-model="management.resource.enabled"
+                           ng-model-options="{ updateOn: 'default' }"
+                           ng-change="management.save('enabled')">
+                </label>
             </div>
         </div>
+    </div>
 
-        <div class="form-group">
-            <label for="inputEnabled" class="col-sm-3 control-label">Enabled</label>
-            <div class="col-sm-6">
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" id="inputEnabled"
-                               ng-model="management.resource.enabled"
-                               ng-model-options="{ updateOn: 'default' }"
-                               ng-change="management.save('enabled')">
-                    </label>
-                </div>
-            </div>
+    <div class="form-group">
+        <label for="inputJndiName" class="col-sm-3 control-label">Jndi Name</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputJndiName"
+                   ng-model="management.resource['jndi-name']"
+                   ng-change="management.save('jndi-name')">
         </div>
+    </div>
 
-        <div class="form-group">
-            <label for="inputJndiName" class="col-sm-3 control-label">Jndi Name</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" id="inputJndiName"
-                       ng-model="management.resource['jndi-name']"
-                       ng-change="management.save('jndi-name')">
-            </div>
+    <div class="form-group">
+        <label for="inputDriver" class="col-sm-3 control-label">Driver</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputDriver"
+                   ng-model="management.resource['driver-name']"
+                   ng-change="management.save('driver-name')">
         </div>
+    </div>
 
-        <div class="form-group">
-            <label for="inputDriver" class="col-sm-3 control-label">Driver</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" id="inputDriver"
-                       ng-model="management.resource['driver-name']"
-                       ng-change="management.save('driver-name')">
-            </div>
+    <div class="form-group">
+        <label for="inputConnectionUrl" class="col-sm-3 control-label">Connection URL</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputConnectionUrl"
+                   ng-model="management.resource['connection-url']"
+                   ng-change="management.save('connection-url')">
         </div>
+    </div>
 
-        <div class="form-group">
-            <label for="inputConnectionUrl" class="col-sm-3 control-label">Connection URL</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" id="inputConnectionUrl"
-                       ng-model="management.resource['connection-url']"
-                       ng-change="management.save('connection-url')">
-            </div>
+    <div class="form-group">
+        <label for="inputUserName" class="col-sm-3 control-label">User Name</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputUserName"
+                   ng-model="management.resource['user-name']"
+                   ng-change="management.save('user-name')">
         </div>
+    </div>
 
-        <div class="form-group">
-            <label for="inputUserName" class="col-sm-3 control-label">User Name</label>
-            <div class="col-sm-6">
-                <input type="text" class="form-control" id="inputUserName"
-                       ng-model="management.resource['user-name']"
-                       ng-change="management.save('user-name')">
-            </div>
+    <div class="form-group">
+        <label for="inputPassword" class="col-sm-3 control-label">Password</label>
+        <div class="col-sm-9">
+            <input type="password" class="form-control" id="inputPassword"
+                   ng-model="management.resource.password"
+                   ng-change="management.save('password')">
         </div>
+    </div>
 
-        <div class="form-group">
-            <label for="inputPassword" class="col-sm-3 control-label">Password</label>
-            <div class="col-sm-6">
-                <input type="password" class="form-control" id="inputPassword"
-                       ng-model="management.resource.password"
-                       ng-change="management.save('password')">
-            </div>
+    <div class="form-group">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-9">
+            <button class="btn btn-primary" id="buttonCreate"
+                    ng-hide="management.name"
+                    ng-click="management.openModal(create)">Create</button>
+            <button class="btn btn-primary" id="buttonDuplicate"
+                    ng-show="management.name"
+                    ng-click="management.duplicate()">Duplicate</button>
+            <button class="btn btn-primary" id="buttonRemove"
+                    ng-click="management.remove()">Remove</button>
         </div>
+    </div>
 
-        <div class="form-group">
-            <div class="col-sm-3"></div>
-            <div class="col-sm-6">
-                <button class="btn btn-primary" id="buttonReload"
-                        ng-show="management.processState === 'reload-required'"
-                        ng-click="management.reload()">Reload</button>
-                <button class="btn btn-primary" id="buttonCreate"
-                        ng-hide="management.name"
-                        ng-click="management.openModal(create)">Create</button>
-                <button class="btn btn-primary" id="buttonDuplicate"
-                        ng-show="management.name"
-                        ng-click="management.duplicate()">Duplicate</button>
-                <button class="btn btn-primary" id="buttonRemove"
-                        ng-click="management.remove()">Remove</button>
-            </div>
-        </div>
+    <div class="col-sm-8">
+        <alert type="danger" close="management.closeAlert()" ng-show="management.message" >{{management.message}}</alert>
+    </div>
 
-        <div class="col-sm-8">
-            <alert type="danger" close="management.closeAlert()" ng-show="management.message" >{{management.message}}</alert>
-        </div>
-
-    </form>
-</div>
+</form>
