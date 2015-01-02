@@ -23,18 +23,28 @@
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" ng-show="management.name">
             <label class="col-sm-3 control-label">Login Modules</label>
-            <div class="col-sm-6">
-                <ul class="list-group">
-                    <li ng-repeat="loginModule in loginModules" ng-click="selectLoginModule(loginModule)"
-                        class="list-group-item" ng-class="active(loginModule)">{{loginModule.code}}</li>
-                </ul>
+            <div class="col-sm-6 btn-group btn-group-vertical" role="group">
+                <button type="button" ng-repeat="loginModule in loginModuleNames" ng-click="selectLoginModule(loginModule)"
+                       class="btn btn-default" ng-class="active(loginModule)" style="width: 100%">{{loginModule}}</button>
+                <div style="margin-top: 2px">
+                    <button type="button" class="btn btn-primary" ng-click="addLoginModule()">+</button>
+                    <button type="button" class="btn btn-primary" ng-click="removeLoginModule()" ng-show="loginModuleNames.length > 0">-</button>
+                </div>
             </div>
         </div>
 
         <div class="panel panel-default" ng-if="loginModule">
             <div class="panel-body">
+                <div class="form-group">
+                    <label for="inputLoginModuleCode" class="col-sm-3 control-label">Code</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="inputLoginModuleCode"
+                               ng-model="loginModule.code" ng-change="saveLoginModuleAttr('code')">
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Flag</label>
                     <div class="col-sm-6">
@@ -69,20 +79,23 @@
             </div>
         </div>
 
-        <div class="form-group col-sm-9">
+        <div class="form-group">
             <div class="col-sm-3"></div>
             <div class="col-sm-6">
                 <button class="btn btn-primary" id="buttonReload"
                         ng-show="management.processState == 'reload-required'"
                         ng-click="management.reload()">Reload</button>
                 <button class="btn btn-primary" id="buttonCreate"
-                        ng-hide="name"
+                        ng-hide="management.name"
                         ng-click="management.openModal(create)">Create</button>
                 <button class="btn btn-primary" id="buttonDuplicate"
-                        ng-show="name"
+                        ng-show="management.name"
                         ng-click="management.duplicate()">Duplicate</button>
                 <button class="btn btn-primary" id="buttonRemove"
-                        ng-click="management.remove()">Remove</button>
+                        ng-click="remove()">Remove</button>
+                <button class="btn btn-primary" id="buttonCreateLoginModule"
+                        ng-show="loginModule != null && loginModuleName == null"
+                        ng-click="createLoginModule()">Create Login Module</button>
             </div>
         </div>
 

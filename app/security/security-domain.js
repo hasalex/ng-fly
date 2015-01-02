@@ -23,35 +23,81 @@ angular
         load();
 
         $scope.select = function() {
+            $scope.loginModuleNames = null;
             $scope.loginModule = null;
+            $scope.loginModuleName = null;
             $location.search('name', management.name);
             load();
         };
 
+        $scope.remove = function() {
+            management.remove().then(
+                function() {
+                    $scope.loginModuleNames = null;
+                    $scope.loginModule = null;
+                    $scope.loginModuleName = null;
+                }
+            );
+        };
+
+
         function load() {
-            management.load().then(loadLoginModule);
+            management.load()
+                .then(loadLoginModules)
+                .then(selectFirstLoginModule);
         }
 
-        function loadLoginModule() {
-            management.invoke('read-resource', [ {"subsystem": "security"}, {"security-domain": management.name}, {"authentication": "classic"} ]).then(
+        function loadLoginModules() {
+            return management.list([ {"subsystem": "security"}, {"security-domain": management.name}, {"authentication": "classic"} ], 'login-module').then(
                 function(data) {
-                    $scope.loginModules = data.result['login-modules'];
-                    if ($scope.loginModules.length > 0) {
-                        $scope.loginModule = $scope.loginModules[0];
-                    }
+                    $scope.loginModuleNames = data.result;
                 },
                 function(reason) {
-                    $scope.loginModules = null;
+                    $scope.loginModuleNames = null;
+                    var knownError = 'JBAS014807';
+                    if (! reason.message.slice(0, knownError.length) == knownError ) {
+                        management.error(reason);
+                    }
                 }
-            )
+            );
         }
 
-        $scope.selectLoginModule = function(loginModule) {
-            $scope.loginModule = loginModule;
+        function selectFirstLoginModule() {
+            if ($scope.loginModuleNames != null && $scope.loginModuleNames.length > 0) {
+                $scope.loginModuleName = $scope.loginModuleNames[0];
+                $scope.selectLoginModule($scope.loginModuleName);
+            } else {
+                $scope.loginModuleName = null;
+                $scope.loginModule = null;
+            }
+        }
+
+        $scope.selectLoginModule = function(name) {
+            $scope.loginModuleName = name;
+            management.invoke('read-resource', $scope.loginModuleAddress()).then(
+                function(data) {
+                    $scope.loginModule = data.result;
+                },
+                function() {
+                    $scope.loginModule = null;
+                }
+            )
+
+        };
+
+        $scope.removeLoginModule = function() {
+            management.remove($scope.loginModuleAddress())
+                .then(loadLoginModules)
+                .then(selectFirstLoginModule);
+        };
+
+        $scope.addLoginModule = function() {
+            $scope.loginModuleName = null;
+            $scope.loginModule = {"flag": "required"};
         };
 
         $scope.active = function(loginModule) {
-            return (angular.equals($scope.loginModule, loginModule) ? 'active' : '');
+            return (angular.equals($scope.loginModuleName, loginModule) ? 'active' : '');
         };
 
         $scope.create = function(result) {
@@ -61,18 +107,39 @@ angular
         $scope.selectFlag = function(value) {
             $scope.loginModule.flag = value;
             $scope.saveLoginModuleAttr('flag');
-        }
+        };
 
         $scope.saveLoginModuleAttr = function(attr) {
-            management.save(attr, $scope.loginModule, $scope.loginModuleAddress());
-        }
+            if ($scope.loginModuleName != null) {
+                management.save(attr, $scope.loginModule, $scope.loginModuleAddress());
+            }
+        };
+
+        $scope.createLoginModule = function() {
+            management.load( [ {"subsystem": "security"}, {"security-domain": management.name}, {"authentication": "classic"} ]).then(
+                function() {},
+                function() {
+                    $log.debug('ERROR');
+                    management.create(management.name, null, [ {"subsystem": "security"}, {"security-domain": management.name}, {"authentication": "classic"} ]);
+                }
+            ).then(
+                function() {
+                    $scope.loginModuleName = $scope.loginModule.code;
+                    management.create(management.name, $scope.loginModule, $scope.loginModuleAddress());
+                }
+            ).then(
+                function() {
+                    loadLoginModules();
+                }
+            );
+        };
 
         $scope.loginModuleAddress = function() {
             var address = [{"subsystem": "security"},
                 {"security-domain": management.name},
                 {"authentication": "classic"},
-                {"login-module": $scope.loginModule.code}]
+                {"login-module": $scope.loginModuleName}];
             return address;
-        }
+        };
 
     }]);

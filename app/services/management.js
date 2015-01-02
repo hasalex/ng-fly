@@ -12,34 +12,46 @@ angular
         this.rootAddress = null;
         this.resourceType = null;
 
-        function list() {
-            var attr = { "child-type": this.resourceType };
-            var that = this;
-            return invoke('read-children-names', this.rootAddress, attr).then(
-                function(data) {
-                    that.names = data.result;
-                },
-                function (reason) {
-                    that.error(reason);
-                }
-            );
-        }
+        function list(address, type) {
 
-        function load() {
-            if (this.name == null) {
-                this.resource = {};
-                return $q.defer().promise;
-            } else {
+            if (angular.isUndefined(address)) {
+                address = this.rootAddress;
+            }
+            if (angular.isUndefined(type)) {
                 var that = this;
-                return this.invoke('read-resource', this.address()).then(
-                    function (data) {
-                        that.resource = data.result;
-                        that.resource.address = that.address();
+                return invoke('read-children-names', address, { "child-type": this.resourceType }).then(
+                    function(data) {
+                        that.names = data.result;
                     },
                     function (reason) {
                         that.error(reason);
                     }
-                )
+                );
+            } else {
+                return invoke('read-children-names', address, { "child-type": type });
+            }
+
+        }
+
+        function load(address) {
+            if (angular.isUndefined(address)) {
+                if (this.name == null) {
+                    this.resource = {};
+                    return $q.defer().promise;
+                } else {
+                    var that = this;
+                    return this.invoke('read-resource', this.address()).then(
+                        function (data) {
+                            that.resource = data.result;
+                            that.resource.address = that.address();
+                        },
+                        function (reason) {
+                            that.error(reason);
+                        }
+                    )
+                }
+            } else {
+                return this.invoke('read-resource', address);
             }
         }
 
@@ -100,37 +112,53 @@ angular
             );
         }
 
-        function remove() {
+        function remove(address) {
             if (this.name == null) {
                 this.resource = {};
                 return $q.defer().promise;
             }
 
-            var that = this;
-            return this.invoke('remove', this.address()).then(
-                function () {
-                    that.name = null;
-                    $location.search('name', null);
-                    that.list();
-                    that.load();
-                },
-                function (reason) {
-                    that.name = null;
-                    this.error(reason);
-                }
-            )
+            if (angular.isUndefined(address)) {
+                var that = this;
+                return this.invoke('remove', this.address()).then(
+                    function () {
+                        that.name = null;
+                        $location.search('name', null);
+                        that.list();
+                        that.load();
+                    },
+                    function (reason) {
+                        that.name = null;
+                        that.error(reason);
+                    }
+                )
+            } else {
+                return this.invoke('remove', address);
+            }
+
         }
 
-        function create(name, data) {
+
+        function create(name, data, address) {
             this.name = name;
             $location.search('name', this.name);
 
+            if (angular.isUndefined(address)) {
+                address = this.address();
+            }
+
+            angular.forEach(data, function(value, key) {
+                if (value == '') {
+                    data[key] = null;
+                }
+            });
+
             var that = this;
-            return this.invoke('add', this.address(), data).then(
-                function (data) {
+            return this.invoke('add', address, data).then(
+                function (response) {
                     that.list();
                     that.load();
-                    that.processState = data.processState;
+                    that.processState = response.processState;
                 },
                 function (reason) {
                     that.name = null;
@@ -146,7 +174,7 @@ angular
         function invoke(operation, address, args) {
             var deferred = $q.defer();
 
-            var data = angular.isDefined(args) ? args : {};
+            var data =  angular.isDefined(args) && args != null ? args : {};
             data.operation = operation;
             data.address = address;
 
