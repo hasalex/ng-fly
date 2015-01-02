@@ -29,8 +29,8 @@
                 <button type="button" ng-repeat="loginModule in loginModuleNames" ng-click="selectLoginModule(loginModule)"
                        class="btn btn-default" ng-class="active(loginModule)" style="width: 100%">{{loginModule}}</button>
                 <div style="margin-top: 2px">
-                    <button type="button" class="btn btn-primary" ng-click="addLoginModule()">+</button>
-                    <button type="button" class="btn btn-primary" ng-click="removeLoginModule()" ng-show="loginModuleNames.length > 0">-</button>
+                    <button type="button" class="btn btn-primary btn-sm" ng-click="addLoginModule()">+</button>
+                    <button type="button" class="btn btn-primary btn-sm" ng-click="removeLoginModule()" ng-show="loginModuleNames.length > 0">-</button>
                 </div>
             </div>
         </div>
@@ -65,15 +65,15 @@
                     </div>
                 </div>
 
-                <div class="form-group" ng-repeat="(key, value) in loginModule['module-options']">
-                    <label class="col-sm-3 control-label"><span ng-if="$first">Module Option</span></label>
+                <div class="form-group" ng-repeat="obj in moduleOptions">
+                    <label class="col-sm-3 control-label"><span ng-if="$first">Module Options</span></label>
                     <div class="col-sm-2">
                         <input type="text" class="form-control"
-                               ng-model="key" ng-readonly="true">
+                               ng-model="obj.key" ng-readonly="false" ng-change="saveModuleOptions()">
                     </div>
                     <div class="col-sm-4">
                         <input type="text" class="form-control"
-                               ng-model="value" wf-expression  ng-readonly="true">
+                               ng-model="obj.value" wf-expression  ng-readonly="false" ng-change="saveModuleOptions()">
                     </div>
                 </div>
             </div>

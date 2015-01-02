@@ -77,13 +77,21 @@ angular
             management.invoke('read-resource', $scope.loginModuleAddress()).then(
                 function(data) {
                     $scope.loginModule = data.result;
+                    showModuleOptions();
                 },
                 function() {
                     $scope.loginModule = null;
                 }
             )
-
         };
+
+        function showModuleOptions() {
+            $scope.moduleOptions = [];
+            angular.forEach($scope.loginModule['module-options'], function(value, key) {
+                $scope.moduleOptions.push( { "key": key, "value": value } );
+            });
+            $scope.moduleOptions.push( { "key": "", "value": "" } );
+        }
 
         $scope.removeLoginModule = function() {
             management.remove($scope.loginModuleAddress())
@@ -94,6 +102,7 @@ angular
         $scope.addLoginModule = function() {
             $scope.loginModuleName = null;
             $scope.loginModule = {"flag": "required"};
+            $scope.moduleOptions = [ { "key": "", "value": ""} ];
         };
 
         $scope.active = function(loginModule) {
@@ -141,5 +150,20 @@ angular
                 {"login-module": $scope.loginModuleName}];
             return address;
         };
+
+        $scope.saveModuleOptions = function() {
+            var modifiedModuleOptions = {};
+            angular.forEach($scope.moduleOptions, function(obj) {
+                if (obj.key !== '') {
+                    modifiedModuleOptions[obj.key] = obj.value;
+                }
+            });
+            $scope.loginModule['module-options'] = modifiedModuleOptions;
+
+            if ($scope.loginModuleName != null) {
+                management.save('module-options', $scope.loginModule, $scope.loginModuleAddress());
+            }
+            showModuleOptions();
+        }
 
     }]);
