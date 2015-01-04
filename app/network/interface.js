@@ -15,15 +15,10 @@ angular
     .controller('InterfaceController', ['$scope', 'management', function ($scope, management) {
 
         $scope.management = management;
-        management.initName();
-        management.rootAddress = [  ];
-        management.resourceType = "interface";
-
-        management.list();
-        management.load();
+        management.initPage([ ], "interface");
 
         $scope.create = function(result) {
-            management.create(result.name, management.resource);
+            return management.create(result.name, management.resource);
         };
 
     }]);

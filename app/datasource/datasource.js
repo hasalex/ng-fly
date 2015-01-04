@@ -15,15 +15,11 @@ angular
     .controller('DataSourceController', ['$scope', 'management', function ($scope, management) {
 
         $scope.management = management;
-        management.initName();
-        management.rootAddress = [ { "subsystem": "datasources" } ];
-        management.resourceType = "data-source";
 
-        management.list();
-        management.load();
+        management.initPage([ { "subsystem": "datasources" } ], "data-source");
 
         $scope.create = function(result) {
-             management.create(result.name, management.resource);
+             return management.create(result.name, management.resource);
         };
 
     }]);

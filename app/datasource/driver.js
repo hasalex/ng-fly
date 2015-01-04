@@ -15,15 +15,10 @@ angular
     .controller('DriverController', ['$scope', 'management', function ($scope, management) {
 
         $scope.management = management;
-        management.initName();
-        management.rootAddress = [ { "subsystem": "datasources" } ];
-        management.resourceType = "jdbc-driver";
-
-        management.list();
-        management.load();
+        management.initPage([ { "subsystem": "datasources" } ], "jdbc-driver");
 
         $scope.create = function(result) {
             management.resource['driver-name'] = result.name;
-            management.create(result.name, management.resource);
+            return management.create(result.name, management.resource);
         };
     }]);

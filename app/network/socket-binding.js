@@ -15,15 +15,10 @@ angular
     .controller('SocketBindingController', ['$scope', 'management', function ($scope, management) {
 
         $scope.management = management;
-        management.initName();
-        management.rootAddress = [ {"socket-binding-group": "standard-sockets"} ];
-        management.resourceType = "socket-binding";
-
-        management.list();
-        management.load();
+        management.initPage([ {"socket-binding-group": "standard-sockets"} ], "socket-binding");
 
         $scope.create = function(result) {
-            management.create(result.name, management.resource);
+            return management.create(result.name, management.resource);
         };
 
     }]);

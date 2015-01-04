@@ -15,12 +15,9 @@ angular
     .controller('SecurityDomainController', ['$scope', '$log', '$location', 'management', function ($scope, $log, $location, management) {
 
         $scope.management = management;
-        management.initName();
-        management.rootAddress = [ {"subsystem": "security"} ];
-        management.resourceType = "security-domain";
-
-        management.list();
-        load();
+        management.initPage([ {"subsystem": "security"} ], "security-domain")
+            .then(loadLoginModules)
+            .then(selectFirstLoginModule);
 
         $scope.select = function() {
             $scope.loginModuleNames = null;
@@ -31,7 +28,7 @@ angular
         };
 
         $scope.remove = function() {
-            management.remove().then(
+            return management.remove().then(
                 function() {
                     $scope.loginModuleNames = null;
                     $scope.loginModule = null;
@@ -42,7 +39,7 @@ angular
 
 
         function load() {
-            management.load()
+            return management.load()
                 .then(loadLoginModules)
                 .then(selectFirstLoginModule);
         }
@@ -65,7 +62,7 @@ angular
         function selectFirstLoginModule() {
             if ($scope.loginModuleNames != null && $scope.loginModuleNames.length > 0) {
                 $scope.loginModuleName = $scope.loginModuleNames[0];
-                $scope.selectLoginModule($scope.loginModuleName);
+                return $scope.selectLoginModule($scope.loginModuleName);
             } else {
                 $scope.loginModuleName = null;
                 $scope.loginModule = null;
@@ -74,7 +71,7 @@ angular
 
         $scope.selectLoginModule = function(name) {
             $scope.loginModuleName = name;
-            management.invoke('read-resource', $scope.loginModuleAddress()).then(
+            return management.invoke('read-resource', $scope.loginModuleAddress()).then(
                 function(data) {
                     $scope.loginModule = data.result;
                     showModuleOptions();
@@ -94,7 +91,7 @@ angular
         }
 
         $scope.removeLoginModule = function() {
-            management.remove($scope.loginModuleAddress())
+            return management.remove($scope.loginModuleAddress())
                 .then(loadLoginModules)
                 .then(selectFirstLoginModule);
         };
@@ -110,17 +107,17 @@ angular
         };
 
         $scope.create = function(result) {
-            management.create(result.name, management.resource);
+            return management.create(result.name, management.resource);
         };
 
         $scope.selectFlag = function(value) {
             $scope.loginModule.flag = value;
-            $scope.saveLoginModuleAttr('flag');
+            return $scope.saveLoginModuleAttr('flag');
         };
 
         $scope.saveLoginModuleAttr = function(attr) {
             if ($scope.loginModuleName != null) {
-                management.save(attr, $scope.loginModule, $scope.loginModuleAddress());
+                return management.save(attr, $scope.loginModule, $scope.loginModuleAddress());
             }
         };
 

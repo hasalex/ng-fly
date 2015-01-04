@@ -12,12 +12,28 @@ angular
         this.rootAddress = null;
         this.resourceType = null;
 
+
+        function initPage(address, type) {
+            this.rootAddress = address;
+            this.resourceType = type;
+
+            var that = this;
+            return this.list().then(
+                function() {
+                    that.initName();
+                    that.load();
+                }
+            );
+        };
+
         function list(address, type) {
 
             if (angular.isUndefined(address)) {
                 address = this.rootAddress;
             }
             if (angular.isUndefined(type)) {
+                var newName = this.name;
+                this.name = null;
                 var that = this;
                 return invoke('read-children-names', address, { "child-type": this.resourceType }).then(
                     function(data) {
@@ -25,6 +41,12 @@ angular
                     },
                     function (reason) {
                         that.error(reason);
+                    }
+                ).finally(
+                    function() {
+                        // Counterpart of "var newName = this.name;"
+                        // Turnaround for Chrome (no need for FF)
+                        that.name = newName;
                     }
                 );
             } else {
@@ -124,13 +146,17 @@ angular
                     function () {
                         that.name = null;
                         $location.search('name', null);
-                        that.list();
-                        that.load();
+                        return that.list();
+                    }
+                ).then(
+                    function () {
+                        return that.load();
                     },
                     function (reason) {
                         that.name = null;
                         that.error(reason);
                     }
+
                 )
             } else {
                 return this.invoke('remove', address);
@@ -156,10 +182,14 @@ angular
             var that = this;
             return this.invoke('add', address, data).then(
                 function (response) {
-                    that.list();
-                    that.load();
                     that.processState = response.processState;
-                },
+                    return that.list();
+                }
+            ).then(
+                function () {
+                    return that.load();
+                }
+                ,
                 function (reason) {
                     that.name = null;
                     that.error(reason);
@@ -168,7 +198,7 @@ angular
         }
 
         function openModal(callback) {
-            modalService.show().then(callback);
+            return modalService.show().then(callback);
         }
 
         function invoke(operation, address, args) {
@@ -182,15 +212,15 @@ angular
                 method: 'POST',
                 url: '/management',
                 data: data
-            }).
-                success(function (result) {
-                    deferred.resolve(processState(result));
-                }).
-                error(function (data) {
-                    var r = reason(data);
-                    $log.warn(r);
-                    deferred.reject(r);
-                });
+            })
+            .success(function (result) {
+                deferred.resolve(processState(result));
+            })
+            .error(function (data) {
+                var r = reason(data);
+                $log.warn(r);
+                deferred.reject(r);
+            });
             return deferred.promise;
         }
 
@@ -245,7 +275,8 @@ angular
             address: address,
             error: error,
             openModal: openModal,
-            initName: initName
+            initName: initName,
+            initPage: initPage
         }
 
     }]);

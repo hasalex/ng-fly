@@ -21,10 +21,11 @@ angular
     }]).
 
     controller('MenuController', ['$scope', '$location', '$log', 'management', function ($scope, $location, $log, management) {
-        var resources = new Array();
+        var resources = [];
 
         management.invoke('read-children-names', [], {"child-type": "subsystem"}).then(
             function (data) {
+                $log.debug(data);
                 resources = data.result;
             }
         );
