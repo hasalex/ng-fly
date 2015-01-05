@@ -29,13 +29,14 @@ angular
         function list(address, type) {
 
             if (angular.isUndefined(address)) {
+                this.names = [];
                 address = this.rootAddress;
             }
             if (angular.isUndefined(type)) {
                 var newName = this.name;
                 this.name = null;
                 var that = this;
-                return invoke('read-children-names', address, { "child-type": this.resourceType }).then(
+                return this.invoke('read-children-names', address, { "child-type": this.resourceType }).then(
                     function(data) {
                         that.names = data.result;
                     },
@@ -207,10 +208,12 @@ angular
             var data =  angular.isDefined(args) && args != null ? args : {};
             data.operation = operation;
             data.address = address;
+            data['include-runtime'] = true;
 
+            var url = (angular.isUndefined(this.server) ? '' : 'http://' + this.server.url) + '/management';
             $http({
                 method: 'POST',
-                url: '/management',
+                url: url,
                 data: data
             })
             .success(function (result) {
@@ -236,13 +239,17 @@ angular
         }
 
         function reason(data) {
-            var result = processState(data);
-            result.message = data["failure-description"];
-            return result;
+            if (data == null) {
+                return '';
+            } else {
+                var result = processState(data);
+                result.message = data["failure-description"];
+                return result;
+            }
         }
 
         function processState(result) {
-            if ( angular.isDefined(result['response-headers']) ) {
+            if ( result != null && angular.isDefined(result['response-headers']) ) {
                 result.processState = result['response-headers']['process-state'];
                 result['response-headers'] = null;
             }

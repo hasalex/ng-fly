@@ -1,0 +1,43 @@
+<div >
+    <p>
+        This application is a <b>home made console for WildFly</b>. Don't expect too much, it's basically a proof of concept.
+        The source code is available on <a href="https://github.com/hasalex/ng-fly">github</a> (the name of the
+        repository will probably change soon).
+    </p>
+    <p>
+        The current version works with CORS but needs some additional setup :
+    </p>
+    <ul>
+        <li>
+            Disable the authentication of the WildFly Management interface. Because, I don't know to make it work.
+        </li>
+        <li>
+            Use a reverse proxy between the browser and WildFly Management interface. Because WildFly does not support
+            CORS, in version 8.x.
+        </li>
+    </ul>
+    <p>
+        For example, you can setup the mod_proxy module in Apache Httpd 2.4 :
+    </p>
+    <pre>
+Listen 90
+&lt;VirtualHost *:90&gt;
+
+    ProxyRequests Off
+    RequestHeader unset Origin
+
+    RewriteEngine on
+    RewriteCond %{REQUEST_METHOD} !OPTIONS
+    RewriteRule ^/management$ http://localhost:9990/management [P]
+    RewriteRule ^/management/(.*)$ http://localhost:9990/management/$1 [P]
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^(.*)$ $1 [R=200,L]
+    ProxyPassReverse /management http://localhost:9990/management
+
+    Header always set Access-Control-Allow-Origin: &quot;*&quot;
+    Header always set Access-Control-Allow-Methods &quot;POST, OPTIONS&quot;
+    Header always set Access-Control-Allow-Headers &quot;content-type&quot;
+
+&lt;/VirtualHost&gt;</pre>
+
+</div>

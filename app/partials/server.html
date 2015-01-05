@@ -5,12 +5,21 @@
         <label class="control-label" for="inputUrl">URL</label>
         <div class="">
             <input type="text" class="form-control" id="inputUrl"
-                   ng-model="management.server.url">
+                   ng-model="management.server.url"
+                   ng-change="updateServerUrl()">
         </div>
     </div>
 
     <div class="form-group">
-        <label class="control-label" for="inputProcessState">State</label>
+        <label class="control-label" for="inputServerState">State</label>
+        <div class="">
+            <input type="text" class="form-control" id="inputServerState"
+                   ng-model="management.server.state" readonly>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label" for="inputProcessState">Process State</label>
         <div class="">
             <input type="text" class="form-control" id="inputProcessState"
                    ng-model="management.processState" readonly>
