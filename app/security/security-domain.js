@@ -125,7 +125,6 @@ angular
             management.load( [ {"subsystem": "security"}, {"security-domain": management.name}, {"authentication": "classic"} ]).then(
                 function() {},
                 function() {
-                    $log.debug('ERROR');
                     management.create(management.name, null, [ {"subsystem": "security"}, {"security-domain": management.name}, {"authentication": "classic"} ]);
                 }
             ).then(

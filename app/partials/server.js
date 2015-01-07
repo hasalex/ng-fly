@@ -23,7 +23,6 @@ angular
             management.load([]).then(
                 function(response) {
                     management.server.state = response.result['server-state'];
-                    $log.debug('OK');
                 },
                 function() {
                     management.server.state = 'not connected';

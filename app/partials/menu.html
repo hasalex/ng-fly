@@ -1,6 +1,6 @@
 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ng-controller="MenuController">
 
-    <div ng-if="management.server.state == 'running'">
+    <div ng-if="management.server.state == 'running'" ng-init="initSubsystemList()">
         <ul class="nav navbar-nav">
             <li ng-if="hasSubsystem('datasources')" ng-class="active('/datasource')"><a href="#/datasource">DataSources</a></li>
             <li ng-if="hasSubsystem('datasources')" ng-class="active('/driver')"><a href="#/driver">Drivers</a></li>

@@ -12,7 +12,6 @@ angular
         this.rootAddress = null;
         this.resourceType = null;
 
-
         function initPage(address, type) {
             this.rootAddress = address;
             this.resourceType = type;
@@ -51,7 +50,7 @@ angular
                     }
                 );
             } else {
-                return invoke('read-children-names', address, { "child-type": type });
+                return this.invoke('read-children-names', address, { "child-type": type });
             }
 
         }
@@ -90,10 +89,9 @@ angular
                 address = this.address();
             }
 
-            $log.debug('Saving attribute ' + attr + ':' + data[attr]);
             var that = this;
             if (data[attr]) {
-                return invoke("write-attribute", address, {"name": attr, "value": data[attr]}).then(
+                return this.invoke("write-attribute", address, {"name": attr, "value": data[attr]}).then(
                     function (data) {
                         that.processState = data.processState;
                     },
@@ -102,7 +100,7 @@ angular
                     }
                 )
             } else {
-                invoke("undefine-attribute", address, {"name": attr}).then(
+                this.invoke("undefine-attribute", address, {"name": attr}).then(
                     function (data) {
                         that.processState = data.processState;
                     },
