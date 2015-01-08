@@ -212,6 +212,7 @@ angular
             $http({
                 method: 'POST',
                 url: url,
+                withCredentials: true,
                 data: data
             })
             .success(function (result) {
