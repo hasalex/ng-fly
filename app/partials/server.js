@@ -3,10 +3,10 @@
 angular
     .module('flyNg.server', ['services', 'ngCookies'])
 
-    .controller('ServerController', ['$scope', '$location', '$cookies', '$log', 'management', function ($scope, $location, $cookies, $log, management) {
+    .controller('ServerController', ['$scope', '$rootScope', '$location', '$cookies', '$log', 'management', function ($scope, $rootScope, $location, $cookies, $log, management) {
         $scope.management = management;
-        var key = 'server-url';
-        var url = decodeURI($cookies[key]);
+        const KEY = 'server-url';
+        var url = decodeURI($cookies[KEY]);
         if (url) {
             management.server = {"url": url};
         } else {
@@ -15,19 +15,25 @@ angular
         loadServerData();
 
         $scope.updateServerUrl = function() {
-            $cookies[key] = encodeURI(management.server.url);
+            $cookies[KEY] = encodeURI(management.server.url);
             loadServerData();
         };
 
         function loadServerData() {
             management.load([]).then(
                 function(response) {
-                    management.server.state = response.result['server-state'];
+                    var serverState = response.result['server-state'];
+                    if (serverState == 'reload-required') {
+                        management.server.state = 'running';
+                    } else {
+                        management.server.state = serverState;
+                    }
                 },
-                function() {
-                    management.server.state = 'not connected';
+                function(reason) {
+                    //management.server.state = 'not connected';
                     $location.path('/');
                 }
             );
         }
+
     }]);

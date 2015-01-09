@@ -11,6 +11,8 @@ angular
         this.processState = null;
         this.rootAddress = null;
         this.resourceType = null;
+        this.server = {stateClass: "has-success"};
+
 
         function initPage(address, type) {
             this.rootAddress = address;
@@ -23,7 +25,7 @@ angular
                     that.load();
                 }
             );
-        };
+        }
 
         function list(address, type) {
 
@@ -209,19 +211,19 @@ angular
             data['include-runtime'] = true;
 
             var url = (angular.isUndefined(this.server) ? '' : 'http://' + this.server.url) + '/management';
+            var that = this;
             $http({
                 method: 'POST',
                 url: url,
                 withCredentials: true,
                 data: data
             })
-            .success(function (result) {
-                deferred.resolve(processState(result));
+            .success(function (response) {
+                deferred.resolve(that.processResponseHeaders(response));
             })
-            .error(function (data) {
-                var r = reason(data);
-                $log.warn(r);
-                deferred.reject(r);
+            .error(function (data, status) {
+                that.processHttpHeaders(status);
+                deferred.reject(reason(data));
             });
             return deferred.promise;
         }
@@ -247,14 +249,6 @@ angular
             }
         }
 
-        function processState(result) {
-            if ( result != null && angular.isDefined(result['response-headers']) ) {
-                result.processState = result['response-headers']['process-state'];
-                result['response-headers'] = null;
-            }
-            return result;
-        }
-
         function address() {
             var address = this.rootAddress.slice(0);
             var resource = {};
@@ -266,8 +260,33 @@ angular
         function initName() {
             this.name = angular.isDefined($routeParams.name) ? $routeParams.name : null;
         }
+        function processResponseHeaders(response) {
+            var headers = response['response-headers'];
+            if (headers == null) {
+                this.server.processState = '';
+            } else {
+                this.server.processState = headers['process-state'];
+            }
+            response['response-headers'] = null;
+            this.server.stateClass = '';
+
+            return response;
+        }
+
+        function processHttpHeaders(status) {
+            if (status > 0) {
+                this.server.state = 'Error ' + status;
+            } else {
+                this.server.state = 'Unknown Error';
+            }
+            this.server.processState = '';
+            this.server.stateClass = 'has-error';
+        }
+
 
         return {
+            processHttpHeaders: processHttpHeaders,
+            processResponseHeaders: processResponseHeaders,
             invoke: invoke,
             save: save,
             list: list,
