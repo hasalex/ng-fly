@@ -37,6 +37,7 @@ angular
                 },function() {
                     management.server.state = 'not connected';
                     $location.path('/');
+                    $location.search('name', null);
                 }
             );
         }
