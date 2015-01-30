@@ -30,8 +30,15 @@ angular
                     } else {
                         management.server.state = serverState;
                     }
+                }).then(
+                function() {
+                    management.list([], "subsystem").then(
+                        function (data) {
+                            management.resources = data.result;
+                        }
+                    );
                 },
-                function(reason) {
+                function() {
                     management.server.state = 'not connected';
                     $location.path('/');
                 }

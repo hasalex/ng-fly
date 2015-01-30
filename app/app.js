@@ -27,15 +27,10 @@ angular
     controller('MenuController', ['$scope', '$location', '$log', 'management', function ($scope, $location, $log, management) {
         $scope.management = management;
 
-        var resources = [];
-        management.invoke('read-children-names', [], {"child-type": "subsystem"}).then(
-            function (data) {
-                resources = data.result;
-            }
-        );
+        management.resources = [];
 
         $scope.hasSubsystem = function (name) {
-            return (resources.indexOf(name) >= 0);
+            return (management.resources.indexOf(name) >= 0);
         };
 
         $scope.active = function (path) {
