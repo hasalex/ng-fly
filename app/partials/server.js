@@ -5,12 +5,14 @@ angular
 
     .controller('ServerController', ['$scope', '$rootScope', '$location', '$cookies', '$log', 'management', function ($scope, $rootScope, $location, $cookies, $log, management) {
         $scope.management = management;
-        const KEY = 'server-url';
-        var url = decodeURI($cookies[KEY]);
-        if (url) {
-            management.server = {"url": url};
-        } else {
+        var KEY = 'server-url';
+        if (!angular.isUndefined($cookies[KEY])) {
+            var url = decodeURI($cookies[KEY]);
+        }
+        if (angular.isUndefined(url)) {
             management.server = {"url": "localhost"};
+        } else {
+            management.server = {"url": url};
         }
         loadServerData();
 
@@ -30,7 +32,7 @@ angular
                     }
                 },
                 function(reason) {
-                    //management.server.state = 'not connected';
+                    management.server.state = 'not connected';
                     $location.path('/');
                 }
             );
