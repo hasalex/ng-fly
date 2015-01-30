@@ -36,17 +36,19 @@ angular
                 var newName = this.name;
                 this.name = null;
                 var that = this;
-                return this.invoke('read-children-names', address, { "child-type": this.resourceType }).then(
-                    function(data) {
-                        that.names = data.result;
-                    }
-                ).finally(
-                    function() {
-                        // Counterpart of "var newName = this.name;"
-                        // Turnaround for Chrome (no need for FF)
-                        that.name = newName;
-                    }
-                );
+                return this.invoke('read-children-names', address, { "child-type": this.resourceType })
+                    .then(
+                        function(data) {
+                            that.names = data.result;
+                        }
+                    )
+                    .finally(
+                        function() {
+                            // Counterpart of "var newName = this.name;"
+                            // Turnaround for Chrome (no need for FF)
+                            that.name = newName;
+                        }
+                    );
             } else {
                 return this.invoke('read-children-names', address, { "child-type": type });
             }
@@ -200,9 +202,9 @@ angular
                 deferred.resolve(data);
             })
             .error(function (data, status) {
-                that.processError(data, status);
-                deferred.reject(data);
-            });
+                deferred.reject(data, status);
+            })
+            ;
             return deferred.promise;
         }
 

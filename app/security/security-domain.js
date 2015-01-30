@@ -53,8 +53,8 @@ angular
                     function(reason) {
                         $scope.loginModuleNames = null;
                         var knownError = 'JBAS014807';
-                        if (! reason['failure-description'].slice(0, knownError.length) == knownError ) {
-                            management.error(reason);
+                        if (! reason['failure-description'].slice(0, knownError.length) === knownError ) {
+                            management.processError(reason);
                         }
                     }
                 );
