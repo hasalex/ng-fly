@@ -7,8 +7,7 @@ angular
         this.name = null;
         this.names = null;
         this.resource = null;
-        this.message = null;
-        this.processState = null;
+        this.current = {};
         this.rootAddress = null;
         this.resourceType = null;
         this.server = {stateClass: "has-success"};
@@ -40,9 +39,6 @@ angular
                 return this.invoke('read-children-names', address, { "child-type": this.resourceType }).then(
                     function(data) {
                         that.names = data.result;
-                    },
-                    function (reason) {
-                        that.error(reason);
                     }
                 ).finally(
                     function() {
@@ -68,9 +64,6 @@ angular
                         function (data) {
                             that.resource = data.result;
                             that.resource.address = that.address();
-                        },
-                        function (reason) {
-                            that.error(reason);
                         }
                     )
                 }
@@ -91,23 +84,14 @@ angular
                 address = this.address();
             }
 
-            var that = this;
             if (data[attr]) {
                 return this.invoke("write-attribute", address, {"name": attr, "value": data[attr]}).then(
                     function (data) {
-                        that.processState = data.processState;
-                    },
-                    function (reason) {
-                        that.error(reason);
                     }
                 )
             } else {
                 this.invoke("undefine-attribute", address, {"name": attr}).then(
                     function (data) {
-                        that.processState = data.processState;
-                    },
-                    function (reason) {
-                        that.error(reason);
                     }
                 )
             }
@@ -124,13 +108,8 @@ angular
         }
 
         function reload() {
-            var that = this;
             return this.invoke( "reload").then(
                 function (data) {
-                    that.processState = data.processState;
-                },
-                function (reason) {
-                    that.error(reason);
                 }
             );
         }
@@ -153,9 +132,8 @@ angular
                     function () {
                         return that.load();
                     },
-                    function (reason) {
+                    function () {
                         that.name = null;
-                        that.error(reason);
                     }
 
                 )
@@ -191,9 +169,8 @@ angular
                     return that.load();
                 }
                 ,
-                function (reason) {
+                function () {
                     that.name = null;
-                    that.error(reason);
                 }
             )
         }
@@ -218,35 +195,19 @@ angular
                 withCredentials: true,
                 data: data
             })
-            .success(function (response) {
-                deferred.resolve(that.processResponseHeaders(response));
+            .success(function (data) {
+                that.processSuccess(data);
+                deferred.resolve(data);
             })
             .error(function (data, status) {
-                that.processHttpHeaders(status);
-                deferred.reject(reason(data));
+                that.processError(data, status);
+                deferred.reject(data);
             });
             return deferred.promise;
         }
 
-        function error(reason) {
-            this.message = reason.message;
-            if ( angular.isDefined(reason.processState) ) {
-                this.processState = reason.processState;
-            }
-        }
-
         function closeAlert() {
             this.message = null;
-        }
-
-        function reason(data) {
-            if (data == null) {
-                return '';
-            } else {
-                var result = processState(data);
-                result.message = data["failure-description"];
-                return result;
-            }
         }
 
         function address() {
@@ -260,7 +221,8 @@ angular
         function initName() {
             this.name = angular.isDefined($routeParams.name) ? $routeParams.name : null;
         }
-        function processResponseHeaders(response) {
+
+        function processSuccess(response) {
             var headers = response['response-headers'];
             if (headers == null) {
                 this.server.processState = '';
@@ -273,11 +235,16 @@ angular
             return response;
         }
 
-        function processHttpHeaders(status) {
+        function processError(data, status) {
+            this.current = {};
+            this.current.message = '';
             if (status > 0) {
                 this.server.state = 'Error ' + status;
-            } else {
+            } else if (status >= 300) {
                 this.server.state = 'Unknown Error';
+            } else if (data != null) {
+                this.server.state = '';
+                this.current.message = data['failure-description'];
             }
             this.server.processState = '';
             this.server.stateClass = 'has-error';
@@ -285,8 +252,8 @@ angular
 
 
         return {
-            processHttpHeaders: processHttpHeaders,
-            processResponseHeaders: processResponseHeaders,
+            processError: processError,
+            processSuccess: processSuccess,
             invoke: invoke,
             save: save,
             list: list,
@@ -298,7 +265,6 @@ angular
             create: create,
             closeAlert: closeAlert,
             address: address,
-            error: error,
             openModal: openModal,
             initName: initName,
             initPage: initPage

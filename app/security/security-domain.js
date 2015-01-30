@@ -45,18 +45,20 @@ angular
         }
 
         function loadLoginModules() {
-            return management.list([ {"subsystem": "security"}, {"security-domain": management.name}, {"authentication": "classic"} ], 'login-module').then(
-                function(data) {
-                    $scope.loginModuleNames = data.result;
-                },
-                function(reason) {
-                    $scope.loginModuleNames = null;
-                    var knownError = 'JBAS014807';
-                    if (! reason.message.slice(0, knownError.length) == knownError ) {
-                        management.error(reason);
+            if (management.name != null) {
+                return management.list([ {"subsystem": "security"}, {"security-domain": management.name}, {"authentication": "classic"} ], 'login-module').then(
+                    function(data) {
+                        $scope.loginModuleNames = data.result;
+                    },
+                    function(reason) {
+                        $scope.loginModuleNames = null;
+                        var knownError = 'JBAS014807';
+                        if (! reason['failure-description'].slice(0, knownError.length) == knownError ) {
+                            management.error(reason);
+                        }
                     }
-                }
-            );
+                );
+            }
         }
 
         function selectFirstLoginModule() {
