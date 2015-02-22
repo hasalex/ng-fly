@@ -45,7 +45,7 @@ angular
         }
 
         function loadLoginModules() {
-            if (management.name != null) {
+            if (management.name !== null) {
                 return management.list([ {"subsystem": "security"}, {"security-domain": management.name}, {"authentication": "classic"} ], 'login-module').then(
                     function(data) {
                         $scope.loginModuleNames = data.result;
@@ -53,7 +53,7 @@ angular
                     function(reason) {
                         $scope.loginModuleNames = null;
                         var knownError = 'JBAS014807';
-                        if (! reason['failure-description'].slice(0, knownError.length) === knownError ) {
+                        if (reason['failure-description'].slice(0, knownError.length) !== knownError ) {
                             management.processError(reason);
                         }
                     }
@@ -62,7 +62,7 @@ angular
         }
 
         function selectFirstLoginModule() {
-            if ($scope.loginModuleNames != null && $scope.loginModuleNames.length > 0) {
+            if ($scope.loginModuleNames !== null && $scope.loginModuleNames.length > 0) {
                 $scope.loginModuleName = $scope.loginModuleNames[0];
                 return $scope.selectLoginModule($scope.loginModuleName);
             } else {
@@ -81,7 +81,7 @@ angular
                 function() {
                     $scope.loginModule = null;
                 }
-            )
+            );
         };
 
         function showModuleOptions() {
@@ -118,7 +118,7 @@ angular
         };
 
         $scope.saveLoginModuleAttr = function(attr) {
-            if ($scope.loginModuleName != null) {
+            if ($scope.loginModuleName !== null) {
                 return management.save(attr, $scope.loginModule, $scope.loginModuleAddress());
             }
         };
@@ -158,10 +158,10 @@ angular
             });
             $scope.loginModule['module-options'] = modifiedModuleOptions;
 
-            if ($scope.loginModuleName != null) {
+            if ($scope.loginModuleName !== null) {
                 management.save('module-options', $scope.loginModule, $scope.loginModuleAddress());
             }
             showModuleOptions();
-        }
+        };
 
     }]);

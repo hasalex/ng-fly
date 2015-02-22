@@ -4,6 +4,7 @@ angular
     .module('services', [])
 
     .factory('management', ['$q', '$http', '$log', '$location', '$routeParams', 'modalService', function($q, $http, $log, $location, $routeParams, modalService){
+        /*jshint validthis:true */
         this.name = null;
         this.names = null;
         this.resource = null;
@@ -57,7 +58,7 @@ angular
 
         function load(address) {
             if (angular.isUndefined(address)) {
-                if (this.name == null) {
+                if (this.name === null) {
                     this.resource = {};
                     return $q.defer().promise;
                 } else {
@@ -67,7 +68,7 @@ angular
                             that.resource = data.result;
                             that.resource.address = that.address();
                         }
-                    )
+                    );
                 }
             } else {
                 return this.invoke('read-resource', address);
@@ -75,7 +76,7 @@ angular
         }
 
         function save(attr, data, address) {
-            if (this.name == null) {
+            if (this.name === null) {
                 return $q.defer().promise;
             }
 
@@ -90,12 +91,12 @@ angular
                 return this.invoke("write-attribute", address, {"name": attr, "value": data[attr]}).then(
                     function (data) {
                     }
-                )
+                );
             } else {
                 this.invoke("undefine-attribute", address, {"name": attr}).then(
                     function (data) {
                     }
-                )
+                );
             }
 
         }
@@ -117,7 +118,7 @@ angular
         }
 
         function remove(address) {
-            if (this.name == null) {
+            if (this.name === null) {
                 this.resource = {};
                 return $q.defer().promise;
             }
@@ -138,7 +139,7 @@ angular
                         that.name = null;
                     }
 
-                )
+                );
             } else {
                 return this.invoke('remove', address);
             }
@@ -155,7 +156,7 @@ angular
             }
 
             angular.forEach(data, function(value, key) {
-                if (value == '') {
+                if (value === '') {
                     data[key] = null;
                 }
             });
@@ -169,12 +170,11 @@ angular
             ).then(
                 function () {
                     return that.load();
-                }
-                ,
+                },
                 function () {
                     that.name = null;
                 }
-            )
+            );
         }
 
         function openModal(callback) {
@@ -184,7 +184,7 @@ angular
         function invoke(operation, address, args) {
             var deferred = $q.defer();
 
-            var data =  angular.isDefined(args) && args != null ? args : {};
+            var data =  angular.isDefined(args) && args !== null ? args : {};
             data.operation = operation;
             data.address = address;
             data['include-runtime'] = true;
@@ -213,11 +213,11 @@ angular
         }
 
         function address() {
-            var address = this.rootAddress.slice(0);
+            var result = this.rootAddress.slice(0);
             var resource = {};
             resource[this.resourceType] = this.name;
-            address.push( resource );
-            return address;
+            result.push( resource );
+            return result;
         }
 
         function initName() {
@@ -226,7 +226,7 @@ angular
 
         function processSuccess(response) {
             var headers = response['response-headers'];
-            if (headers == null) {
+            if (angular.isUndefined(headers)) {
                 this.server.processState = '';
             } else {
                 this.server.processState = headers['process-state'];
@@ -244,7 +244,7 @@ angular
                 this.server.state = 'Error ' + status;
             } else if (status >= 300) {
                 this.server.state = 'Unknown Error';
-            } else if (data != null) {
+            } else if (data !== null) {
                 this.server.state = '';
                 this.current.message = data['failure-description'];
             }
@@ -270,7 +270,7 @@ angular
             openModal: openModal,
             initName: initName,
             initPage: initPage
-        }
+        };
 
     }]);
 

@@ -17,7 +17,7 @@ angular
                 $scope.modalOptions.cancel = function () {
                     $modalInstance.dismiss('cancel');
                 };
-            }
+            };
 
             return $modal.open(modalDefaults).result;
         };

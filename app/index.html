@@ -1,59 +1,80 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="flyNg" class="no-js">
+<html lang="en" ng-app="flyNg" ng-strict-di class="no-js">
 <head>
-  <meta charset="utf-8">
-  <title>My WildFly console</title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css">
-  <link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css">
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
-  <link rel="stylesheet" href="app.css">
-  <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
+    <meta charset="utf-8">
+    <title>My WildFly console</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- build:css styles/lib.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css" />
+    <link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css styles/app.css -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="app.css">
+    <!-- endinject -->
+    <!-- endbuild -->
 
 </head>
 <body>
 
-  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container-fluid">
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
-        <a class="navbar-brand" href="#">WildFly Console</a>
-      </div>
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">WildFly Console</a>
+        </div>
 
 
-      <ng-include src="'partials/menu.html'">
+        <ng-include src="'partials/menu.html'">
     </div><!-- /.container-fluid -->
-  </nav>
+</nav>
 
-  <!--[if lt IE 7]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-  <![endif]-->
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
 
-  <div ng-view class="body col-sm-offset-1 col-sm-8"></div>
-  <div class="col-sm-3">
+<div ng-view class="body col-sm-offset-1 col-sm-8"></div>
+<div class="col-sm-3">
     <div class="panel panel-default">
-      <div class="panel-heading">Server</div>
-      <div class="panel-body">
-        <ng-include src="'partials/server.html'">
-      </div>
+        <div class="panel-heading">Server</div>
+        <div class="panel-body">
+            <ng-include src="'partials/server.html'">
+        </div>
     </div>
-  </div>
+</div>
 
-  <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/angular-route/angular-route.js"></script>
-  <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<!-- build:js js/lib.js -->
+<!-- bower:js -->
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-loader/angular-loader.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
 
-  <script src="directives/management.js"></script>
-  <script src="services/management.js"></script>
-  <script src="services/modal.js"></script>
-  <script src="datasource/datasource.js"></script>
-  <script src="datasource/driver.js"></script>
-  <script src="network/interface.js"></script>
-  <script src="network/socket-binding.js"></script>
-  <script src="security/security-domain.js"></script>
-  <script src="partials/server.js"></script>
-  <script src="app.js"></script>
+<!-- build:js js/app.js -->
+<!-- inject:js -->
+<script src="app.js"></script>
+<script src="datasource/datasource.js"></script>
+<script src="datasource/driver.js"></script>
+<script src="directives/management.js"></script>
+<script src="network/interface.js"></script>
+<script src="network/socket-binding.js"></script>
+<script src="partials/server.js"></script>
+<script src="security/security-domain.js"></script>
+<script src="services/management.js"></script>
+<script src="services/modal.js"></script>
+<!-- endinject -->
+<!-- inject:templates:js -->
+<!-- endinject -->
+<!-- endbuild -->
 </body>
 </html>
