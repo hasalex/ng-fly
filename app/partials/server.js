@@ -25,7 +25,7 @@ angular
             management.load([]).then(
                 function(response) {
                     var serverState = response.result['server-state'];
-                    if (serverState == 'reload-required') {
+                    if (serverState === 'reload-required') {
                         management.server.state = 'running';
                     } else {
                         management.server.state = serverState;

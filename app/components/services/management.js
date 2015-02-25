@@ -88,12 +88,12 @@ angular
             }
 
             if (data[attr]) {
-                return this.invoke("write-attribute", address, {"name": attr, "value": data[attr]}).then(
+                return this.invoke('write-attribute', address, {"name": attr, "value": data[attr]}).then(
                     function (data) {
                     }
                 );
             } else {
-                this.invoke("undefine-attribute", address, {"name": attr}).then(
+                this.invoke('undefine-attribute', address, {"name": attr}).then(
                     function (data) {
                     }
                 );
@@ -203,8 +203,8 @@ angular
             })
             .error(function (data, status) {
                 deferred.reject(data, status);
-            })
-            ;
+            });
+
             return deferred.promise;
         }
 
@@ -240,13 +240,13 @@ angular
         function processError(data, status) {
             this.current = {};
             this.current.message = '';
-            if (status > 0) {
-                this.server.state = 'Error ' + status;
-            } else if (status >= 300) {
+            if (status >= 300) {
                 this.server.state = 'Unknown Error';
+            } else if (status > 0) {
+                this.server.state = 'Error ' + status;
             } else if (data !== null) {
                 this.server.state = '';
-                this.current.message = data['failure-description'];
+                this.current.message = data['failure-description'] || '';
             }
             this.server.processState = '';
             this.server.stateClass = 'has-error';

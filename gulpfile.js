@@ -114,7 +114,10 @@ gulp.task('serve-dist', function() {
 
 });
 
-
+gulp.task('test', function () {
+    return gulp.src('./test/*.spec.js')
+        .pipe($.jasmine());
+});
 
 gulp.task('help', $.taskListing);
 gulp.task('default', ['help']);
