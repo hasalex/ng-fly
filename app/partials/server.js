@@ -9,10 +9,10 @@ angular
         if (!angular.isUndefined($cookies[KEY])) {
             var url = decodeURI($cookies[KEY]);
         }
-        if (angular.isUndefined(this.url)) {
+        if (angular.isUndefined(url)) {
             management.server = {"url": "localhost"};
         } else {
-            management.server = {"url": this.url};
+            management.server = {"url": url};
         }
         loadServerData();
 
