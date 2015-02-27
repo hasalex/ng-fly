@@ -13,7 +13,9 @@ angular
             'flyNg.driver',
             'flyNg.network',
             'flyNg.security',
-            'flyNg.server'
+            'flyNg.server',
+            'flyNg.d3directive',
+            'flyNg.d3'
         ]
     ).
 

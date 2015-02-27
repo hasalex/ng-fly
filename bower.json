@@ -22,7 +22,10 @@
   },
   "overrides": {
     "html5-boilerplate": {
-      "main": ["css/main.css", "css/normalize.css"]
+      "main": [
+        "css/main.css",
+        "css/normalize.css"
+      ]
     }
   }
 }

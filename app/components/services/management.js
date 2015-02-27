@@ -60,7 +60,7 @@ angular
             if (angular.isUndefined(address)) {
                 if (this.name === null) {
                     this.resource = {};
-                    return $q.defer().promise;
+                    return emptyPromise();
                 } else {
                     var that = this;
                     return this.invoke('read-resource', this.address()).then(
@@ -77,7 +77,7 @@ angular
 
         function save(attr, data, address) {
             if (this.name === null) {
-                return $q.defer().promise;
+                return emptyPromise();
             }
 
             if (angular.isUndefined(data)) {
@@ -107,7 +107,7 @@ angular
 
         function select() {
             $location.search('name', this.name);
-            this.load();
+            return this.load();
         }
 
         function reload() {
@@ -120,7 +120,7 @@ angular
         function remove(address) {
             if (this.name === null) {
                 this.resource = {};
-                return $q.defer().promise;
+                return emptyPromise();
             }
 
             if (angular.isUndefined(address)) {
@@ -252,6 +252,11 @@ angular
             this.server.stateClass = 'has-error';
         }
 
+        function emptyPromise() {
+            var deferred = $q.defer();
+            deferred.resolve({});
+            return deferred.promise;
+        }
 
         return {
             processError: processError,
