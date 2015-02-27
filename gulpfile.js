@@ -4,12 +4,9 @@ var gulp = require('gulp');
 var args = require('yargs').argv;
 var del = require('del');
 var browserSync = require('browser-sync');
+var modrewrite = require('connect-modrewrite');
 
 var $ = require('gulp-load-plugins')({lazy:true});
-
-gulp.task('default', function() {
-    // place code for your default task here
-});
 
 gulp.task('lint', function() {
     return gulp
@@ -18,7 +15,6 @@ gulp.task('lint', function() {
         .pipe($.jshint.reporter('jshint-stylish', { verbose: true }))
         .pipe($.jshint.reporter('fail'));
 });
-
 
 gulp.task('dep', function() {
     var wiredep = require('wiredep').stream;
@@ -36,23 +32,7 @@ gulp.task('dep', function() {
 });
 
 gulp.task('serve', function() {
-
-    var connectOptions = {
-        root: 'app',
-        port: 8888
-    };
-    $.connect.server(connectOptions);
-
-});
-
-gulp.task('sync', function() {
-    var browserSyncOptions = {
-        proxy: "localhost:8888",
-        port: 3000,
-        files: ['./app/**/*.*']
-    };
-
-    browserSync(browserSyncOptions);
+    serve("app", 8888);
 });
 
 gulp.task('build-template', function() {
@@ -73,7 +53,7 @@ gulp.task('build-clean',  function(done) {
     del(['dist/**', 'app/.tmp/**'], done);
 });
 
-gulp.task('build-index', ['build-clean', 'build-template', 'dep'],  function() {
+gulp.task('build', ['build-clean', 'build-template', 'dep'],  function() {
     var userefAssets = $.useref.assets();
     var cssFilter = $.filter('**/*.css');
     var jsFilter = $.filter('**/*.js');
@@ -104,14 +84,7 @@ gulp.task('build-index', ['build-clean', 'build-template', 'dep'],  function() {
 });
 
 gulp.task('serve-dist', function() {
-
-    var connectOptions = {
-        root: 'dist',
-        port: 8888,
-        livereload: true
-    };
-    $.connect.server(connectOptions);
-
+    serve('dist', 8880);
 });
 
 gulp.task('test', function () {
@@ -121,3 +94,26 @@ gulp.task('test', function () {
 
 gulp.task('help', $.taskListing);
 gulp.task('default', ['help']);
+
+
+// Reusable function(s)
+
+function serve(dir, port) {
+    var rewriteRules = [
+        '%{REQUEST_METHOD} !OPTIONS',
+        '^/management/(.*)$ http://localhost:9990/management/$1 [P]',
+        '^/management$ http://localhost:9990/management [P]'
+    ];
+    var headers = function (req, res, next) {
+        delete req.headers.origin;
+        next();
+    };
+
+    browserSync({
+        port: port,
+        ui: {port: port+1},
+        files: [dir + "/**/*.*"],
+        server: dir,
+        middleware: [headers, modrewrite(rewriteRules)]
+    });
+}

@@ -12,6 +12,8 @@
     "module": false,
     "inject": false,
 
+    "spyOn": false;
+
     "protractor" : false,
     "browser": false,
     "element": false,

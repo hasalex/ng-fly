@@ -37,7 +37,12 @@
     "wiredep": "~2.2.2",
     "browser-sync": "~2.2.1",
     "del": "~1.1.1",
-    "jasmine-core": "~2.2.0"
+    "jasmine-core": "~2.2.0",
+    "connect-livereload": "~0.5.3",
+    "connect": "~3.3.4",
+    "serve-static": "~1.9.1",
+    "connect-modrewrite": "~0.7.11",
+    "connect-browser-sync": "~1.0.2"
   },
   "scripts": {
     "postinstall": "bower install",
