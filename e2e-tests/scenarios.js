@@ -2,41 +2,39 @@
 
 /* https://github.com/angular/protractor/blob/master/docs/toc.md */
 
-describe('my app', function() {
+describe('my app', function () {
 
-  browser.get('index.html');
+    browser.get('/');
 
-  it('should automatically redirect to /view1 when location hash/fragment is empty', function() {
-    expect(browser.getLocationAbsUrl()).toMatch("/view1");
-  });
+    describe('home page', function () {
 
+        it('should have an empty main menu', function () {
+            expect($('#main-menu').isPresent()).toBe(false);
+        });
 
-  describe('view1', function() {
+        it('should fill the main menu when connected to the server', function () {
+            $('#server-url')
+                .sendKeys(':90')
+                .sendKeys(protractor.Key.TAB);
 
-    beforeEach(function() {
-      browser.get('index.html#/view1');
+            expect($('#main-menu').isPresent()).toBe(true);
+            expect($('#main-menu').$$('li').count()).toBe(5);
+            expect(element(by.model('management.server.state')).getAttribute('value')).toBe('running');
+        });
+
     });
 
+    describe('datasources page', function () {
 
-    it('should render view1 when user navigates to /view1', function() {
-      expect(element.all(by.css('[ng-view] p')).first().getText()).
-        toMatch(/partial for view 1/);
+        it('should work', function () {
+            browser.setLocation('datasource?name=ExampleDS').then(function () {
+                expect($('form').isPresent()).toBe(true);
+
+                expect($('form').$('select').isPresent()).toBe(true);
+                expect($('form').$('select').$('option:checked').getText()).toBe('ExampleDS');
+            });
+        });
+
+
     });
-
-  });
-
-
-  describe('view2', function() {
-
-    beforeEach(function() {
-      browser.get('index.html#/view2');
-    });
-
-
-    it('should render view2 when user navigates to /view2', function() {
-      expect(element.all(by.css('[ng-view] p')).first().getText()).
-        toMatch(/partial for view 2/);
-    });
-
-  });
 });

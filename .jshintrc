@@ -3,12 +3,22 @@
   "globals": {
     "require": false,
     "angular": false,
+
     "describe": false,
     "it": false,
     "expect": false,
     "beforeEach": false,
     "afterEach": false,
     "module": false,
-    "inject": false
+    "inject": false,
+
+    "protractor" : false,
+    "browser": false,
+    "element": false,
+    "by": false,
+    "$": false,
+    "$$": false
+
+
   }
 }
