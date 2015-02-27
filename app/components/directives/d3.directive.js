@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('flyNg.d3directive', ['flyNg.d3'])
+    .module('flyNg.directives', ['flyNg.services'])
 
     .directive('d3Bars', ['$window', '$timeout', 'd3Service',
         function ($window, $timeout, d3Service) {

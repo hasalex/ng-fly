@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('flyNg.network')
+    .module('flyNg.network', ['flyNg.services'])
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider

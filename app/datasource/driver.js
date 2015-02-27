@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('flyNg.driver', ['ngRoute', 'services'])
+    .module('flyNg.driver', ['ngRoute', 'flyNg.services'])
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider

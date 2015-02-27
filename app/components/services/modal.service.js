@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('services')
+    .module('flyNg.services')
 
     .service('modalService', ['$modal', function($modal) {
         var modalDefaults = {

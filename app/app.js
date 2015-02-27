@@ -7,15 +7,13 @@ angular
             'ngRoute',
             'ngCookies',
             'ui.bootstrap',
-            'directives',
-            'services',
+            'flyNg.services',
+            'flyNg.directives',
             'flyNg.ds',
             'flyNg.driver',
             'flyNg.network',
             'flyNg.security',
-            'flyNg.server',
-            'flyNg.d3directive',
-            'flyNg.d3'
+            'flyNg.server'
         ]
     ).
 

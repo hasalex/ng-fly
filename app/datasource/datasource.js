@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('flyNg.ds', ['ngRoute'])
+    .module('flyNg.ds', ['ngRoute', 'flyNg.services'])
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
@@ -11,15 +11,29 @@ angular
                 reloadOnSearch: false
             });
     }])
-
     .controller('DataSourceController', ['$scope', 'management', function ($scope, management) {
 
         $scope.management = management;
 
-        management.initPage([ { "subsystem": "datasources" } ], "data-source");
+        management.initPage([{"subsystem": "datasources"}], "data-source");
 
-        $scope.create = function(result) {
-             return management.create(result.name, management.resource);
+        $scope.create = function (result) {
+            return management.create(result.name, management.resource);
+        };
+
+        $scope.select = function () {
+            return management.select()
+                .then(function () {
+                    if (management.name === null) {
+                        printStatistics();
+                    } else {
+                        var address = management.address();
+                        address.push({"statistics": "pool"});
+                        return management.load(address);
+                    }
+                }).then(function (data) {
+                    printStatistics(data.result);
+                });
         };
 
         function printStatistics(statistics) {
@@ -40,19 +54,6 @@ angular
             ];
         }
 
-        $scope.select = function() {
-            return management.select()
-                .then(function() {
-                    if (management.name === null) {
-                        printStatistics();
-                    } else {
-                        var address = management.address();
-                        address.push({"statistics": "pool"});
-                        return management.load(address);
-                    }
-                }).then(function(data) {
-                    printStatistics(data.result);
-                });
-        };
-
     }]);
+
+

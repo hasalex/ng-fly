@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('services', [])
+    .module('flyNg.services')
 
     .factory('management', ['$q', '$http', '$log', '$location', '$routeParams', 'modalService', function($q, $http, $log, $location, $routeParams, modalService){
         /*jshint validthis:true */

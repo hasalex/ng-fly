@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('flyNg.d3', [])
+    .module('flyNg.services', [])
 
     .factory('d3Service', ['$document', '$window', '$q', '$rootScope',
         function($document, $window, $q, $rootScope) {

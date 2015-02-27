@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('flyNg.server', ['services', 'ngCookies'])
+    .module('flyNg.server', ['flyNg.services', 'ngCookies'])
 
     .controller('ServerController', ['$scope', '$rootScope', '$location', '$cookies', '$log', 'management', function ($scope, $rootScope, $location, $cookies, $log, management) {
         $scope.management = management;

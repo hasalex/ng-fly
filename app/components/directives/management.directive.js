@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('directives', [])
+    .module('flyNg.directives')
 
     .directive('wfExpression', [function() {
         return {

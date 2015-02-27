@@ -6,7 +6,7 @@ describe('Management', function () {
 
     var TEST_RESOURCE = {"ATTR1": "VALUE1", "ATTR2": "VALUE2"};
 
-    beforeEach(module('services'));
+    beforeEach(module('flyNg.services'));
 
     beforeEach(function () {
         module('ngRoute');
