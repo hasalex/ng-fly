@@ -1,14 +1,16 @@
 language: node_js
+
 node_js:
   - "0.10"
 
 before_script:
   - npm install -g gulp
-  
+  - sudo apt-get update -qq
+  - sudo apt-get install -y curl
+
 script:
   - gulp archive
 
 after_success:
-  - curl -T dist/fly-ng.tar.gz -H "X-Bintray-Publish: 1" -H "X-Bintray-Override: 1" -u$BT_USERNAME:$BT_KEY https://api.bintray.com/content/$BT_USERNAME/generic/fly_ng/0/fly-ng.tar.gz
-  - curl --data "build=true" -X POST https://registry.hub.docker.com/u/$DOCKER_USERNAME/fly-ng/trigger/$DOCKER_KEY/
-  
+  - "curl -T ./dist/fly-ng.tar.gz -H \"X-Bintray-Publish: 1\" -H \"X-Bintray-Override: 1\" -u$BT_USERNAME:$BT_KEY https://api.bintray.com/content/$BT_USERNAME/generic/fly-ng/0/fly-ng.tar.gz"
+  - "curl --data \"build=true\" -X POST https://registry.hub.docker.com/u/$DOCKER_USERNAME/fly-ng/trigger/$DOCKER_KEY/"
