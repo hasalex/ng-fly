@@ -83,6 +83,13 @@ gulp.task('build', ['build-clean', 'build-template', 'dep'],  function() {
         .pipe(gulp.dest('./dist/'));
 });
 
+gulp.task('archive', ['build'],  function() {
+    return gulp.src('dist/**')
+        .pipe($.tar('fly-ng.tar'))
+        .pipe($.gzip())
+        .pipe(gulp.dest('dist'));
+});
+
 gulp.task('serve-dist', function() {
     serve('dist', 8880);
 });

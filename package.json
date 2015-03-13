@@ -42,7 +42,10 @@
     "connect": "~3.3.4",
     "serve-static": "~1.9.1",
     "connect-modrewrite": "~0.7.11",
-    "connect-browser-sync": "~1.0.2"
+    "connect-browser-sync": "~1.0.2",
+    "gulp-zip": "~2.0.3",
+    "gulp-tar": "~1.4.0",
+    "gulp-gzip": "~1.0.0"
   },
   "scripts": {
     "postinstall": "bower install",
