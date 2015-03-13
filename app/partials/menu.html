@@ -8,6 +8,7 @@
             <li ng-class="active('/socket-binding')"><a href="#/socket-binding">Socket Bindings</a></li>
             <li ng-if="hasSubsystem('security')" ng-class="active('/security-domain')"><a href="#/security-domain">Security Domains</a></li>
             <li ng-if="hasSubsystem('messaging')" ng-class="active('/xxx')"><a href="#/">JMS Destinations (TBD)</a></li>
+            <li ng-if="hasSubsystem('cassandra')" ng-class="active('/cassandra')"><a href="#/cassandra">Cassandra</a></li>
         </ul>
     </div>
 

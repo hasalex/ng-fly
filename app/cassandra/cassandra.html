@@ -1,0 +1,101 @@
+<form class="form-horizontal" role="form" ng-model-options="{ updateOn: 'blur' }">
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Cluster</label>
+        <div class="col-sm-9">
+            <select id="inputName" class="form-control"
+                    ng-model="management.name"
+                    ng-model-options="{ updateOn: 'default' }"
+                    ng-options="key for key in management.names"
+                    ng-change="management.select()">
+                <option value="">-- Select a Cluster--</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="inputSeedProviderClassName" class="col-sm-3 control-label">seed-provider-class-name</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputSeedProviderClassName"
+                   ng-model="management.resource['seed-provider-class-name']"
+                   ng-change="management.save('seed-provider-class-name')">
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label for="inputSeedProviderSeeds" class="col-sm-3 control-label">seed-provider-seeds</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputSeedProviderSeeds"
+                   ng-model="management.resource['seed-provider-seeds']" wf-expression
+                   ng-change="management.save('seed-provider-seeds')">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="inputListenAddess" class="col-sm-3 control-label">listen-address</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputListenAddess"
+                   ng-model="management.resource['listen-address']" wf-expression
+                   ng-change="management.save('listen-address')">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="inputBroadcastAddress" class="col-sm-3 control-label">broadcast-address</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="inputBroadcastAddress"
+                   ng-model="management.resource['broadcast-address']" wf-expression
+                   ng-change="management.save('broadcast-address')">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="inputStartRpc" class="col-sm-3 control-label">start-rpc</label>
+        <div class="col-sm-9">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="inputStartRpc"
+                           ng-model="management.resource['start-rpc']"
+                           ng-model-options="{ updateOn: 'default' }"
+                           ng-change="management.save('start-rpc')">
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="inputStartNativeTransport" class="col-sm-3 control-label">start-native-transport</label>
+        <div class="col-sm-9">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="inputStartNativeTransport"
+                           ng-model="management.resource['start-native-transport']"
+                           ng-model-options="{ updateOn: 'default' }"
+                           ng-change="management.save('start-native-transport')">
+                </label>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="form-group">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-9">
+            <button class="btn btn-primary" id="buttonCreate"
+                    ng-hide="management.name"
+                    ng-click="management.openModal(create)">Create</button>
+            <button class="btn btn-primary" id="buttonDuplicate"
+                    ng-show="management.name"
+                    ng-click="management.duplicate()">Duplicate</button>
+            <button class="btn btn-primary" id="buttonRemove"
+                    ng-click="management.remove()">Remove</button>
+        </div>
+    </div>
+
+    <div class="col-sm-8">
+        <alert type="danger" close="management.closeAlert()" ng-show="management.message" >{{management.message}}</alert>
+    </div>
+
+</form>

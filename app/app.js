@@ -13,6 +13,7 @@ angular
             'flyNg.driver',
             'flyNg.network',
             'flyNg.security',
+            'flyNg.cassandra',
             'flyNg.server'
         ]
     ).

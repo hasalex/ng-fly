@@ -87,7 +87,7 @@ angular
                 address = this.address();
             }
 
-            if (data[attr]) {
+            if (data[attr] !== '') {
                 return this.invoke('write-attribute', address, {"name": attr, "value": data[attr]}).then(
                     function (data) {
                     }
@@ -278,4 +278,3 @@ angular
         };
 
     }]);
-
