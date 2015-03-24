@@ -7,7 +7,7 @@
                     ng-model="management.name"
                     ng-model-options="{ updateOn: 'default' }"
                     ng-options="key for key in management.names"
-                    ng-change="management.select()">
+                    ng-change="select()">
                 <option value="">-- Select a Cluster--</option>
             </select>
         </div>
@@ -78,11 +78,62 @@
         </div>
     </div>
 
+    <div class="form-group" ng-show="management.name">
+        <label class="col-sm-3 control-label">Keyspaces</label>
+        <div class="col-sm-9 btn-group btn-group-vertical" role="group">
+            <button type="button" ng-repeat="keyspaceName in keyspaceNames" ng-click="selectKeyspace(keyspaceName)"
+                   class="btn btn-default" ng-class="active(keyspaceName)" >{{keyspaceName}}</button>
+            <div style="margin-top: 2px">
+                <button type="button" class="btn btn-primary btn-sm" ng-click="addKeyspace()">+</button>
+                <button type="button" class="btn btn-primary btn-sm" ng-click="removeKeyspace(keyspaceName)" ng-show="keyspaceName">-</button>
+            </div>
 
+    <div class="panel panel-default" ng-if="keyspace">
+        <div class="panel-body">
+            <div class="form-group">
+                <label for="keyspaceName" class="col-sm-3 control-label">Name</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="keyspaceName"
+                           ng-disabled="keyspaceName"
+                           ng-model="keyspace.name">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="keyspaceClass" class="col-sm-3 control-label">Class</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="keyspaceClass"
+                           ng-disabled="keyspaceName"
+                           ng-model="keyspace.class">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="keyspaceReplicationFactor" class="col-sm-3 control-label">Replication Factor</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="keyspaceReplicationFactor"
+                           ng-disabled="keyspaceName"
+                           ng-model="keyspace.replication_factor">
+                </div>
+            </div>
+
+            <div class="form-group" ng-show="keyspace != null && keyspaceName == null">
+                <label class="col-sm-3 control-label"></label>
+                <div class="col-sm-9">
+                   <button class="btn btn-primary" id="buttonCreateKeyspace"
+                           ng-click="createKeyspace()">Create Keyspace</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
 
     <div class="form-group">
         <div class="col-sm-3"></div>
         <div class="col-sm-9">
+            <!--
             <button class="btn btn-primary" id="buttonCreate"
                     ng-hide="management.name"
                     ng-click="management.openModal(create)">Create</button>
@@ -91,6 +142,7 @@
                     ng-click="management.duplicate()">Duplicate</button>
             <button class="btn btn-primary" id="buttonRemove"
                     ng-click="management.remove()">Remove</button>
+            -->
         </div>
     </div>
 
