@@ -5,6 +5,7 @@ var args = require('yargs').argv;
 var del = require('del');
 var browserSync = require('browser-sync');
 var modrewrite = require('connect-modrewrite');
+var karma = require('karma').server;
 
 var $ = require('gulp-load-plugins')({lazy:true});
 
@@ -94,10 +95,20 @@ gulp.task('serve-dist', function() {
     serve('dist', 8880);
 });
 
-gulp.task('test', function () {
-    return gulp
-        .src('./test/*.spec.js')
-        .pipe($.jasmine());
+gulp.task('test', function (done) {
+  karma.start({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  },
+  done);
+});
+
+gulp.task('test-live', function (done) {
+  karma.start({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: false
+  },
+  done);
 });
 
 gulp.task('help', $.taskListing);

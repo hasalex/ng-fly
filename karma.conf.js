@@ -7,7 +7,7 @@ module.exports = function (config) {
 
         // which files are included in the browser and which files are watched and served by Karma.
         files: [
-            'app/bower_components/angular*/angular.js',
+            'app/bower_components/angular/angular.js',
             'app/bower_components/angular-route/angular-route.js',
             'app/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
             'app/bower_components/angular-mocks/angular-mocks.js',

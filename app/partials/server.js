@@ -22,24 +22,33 @@ angular
         };
 
         function loadServerData() {
-            management.load([]).then(
-                function(response) {
-                    var serverState = response.result['server-state'];
-                    if (serverState === 'reload-required') {
-                        management.server.state = 'running';
-                    } else {
-                        management.server.state = serverState;
+            management.server.stateDetail = null;
+            management
+                .load([])
+                .then(
+                    function(response) {
+                        var serverState = response.result['server-state'];
+                        if (serverState === 'reload-required') {
+                            management.server.state = 'running';
+                        } else {
+                            management.server.state = serverState;
+                        }
+                        return management.list([], "subsystem");
+                    })
+                .then(
+                    function (data) {
+                        management.resources = data.result;
+                    }, function(data) {
+                        if (data) {
+                            management.server.state = 'Error ' + data.status;
+                            management.server.stateDetail = data['failure-description'];
+                        } else {
+                            management.server.state = 'not connected';
+                        }
+                        $location.path('/');
+                        $location.search('name', null);
                     }
-                    return management.list([], "subsystem");
-            }).then(
-                function (data) {
-                    management.resources = data.result;
-                },function() {
-                    management.server.state = 'not connected';
-                    $location.path('/');
-                    $location.search('name', null);
-                }
-            );
+                );
         }
 
     }]);

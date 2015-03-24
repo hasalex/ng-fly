@@ -87,16 +87,22 @@ angular
                 address = this.address();
             }
 
-            if (data[attr] !== '') {
-                return this.invoke('write-attribute', address, {"name": attr, "value": data[attr]}).then(
-                    function (data) {
-                    }
-                );
+            if (data[attr] === null || data[attr] === '') {
+              this.invoke('undefine-attribute', address, {"name": attr}).then(
+                  function (data) {
+                  },
+                  function (data) {
+                    this.processError(data, data.status)
+                  }.bind(this)
+              );
             } else {
-                this.invoke('undefine-attribute', address, {"name": attr}).then(
-                    function (data) {
-                    }
-                );
+              return this.invoke('write-attribute', address, {"name": attr, "value": data[attr]}).then(
+                  function (data) {
+                  },
+                  function (data) {
+                    this.processError(data, data.status)
+                  }.bind(this)
+              );
             }
 
         }
@@ -181,6 +187,27 @@ angular
             return modalService.show().then(callback);
         }
 
+        function ping() {
+            var deferred = $q.defer();
+
+            var url = 'http://' + this.server.url + '/management';
+            $http({
+                method: 'OPTIONS',
+                //method: 'GET',
+                url: url,
+                withCredentials: true
+            })
+            .success(function (data, status, headers, config, statusText) {
+                deferred.resolve(data);
+            })
+            .error(function (error, status, headers, config, statusText) {
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
+        }
+
+
         function invoke(operation, address, args) {
             var deferred = $q.defer();
 
@@ -191,25 +218,31 @@ angular
 
             var url = (angular.isUndefined(this.server) ? '' : 'http://' + this.server.url) + '/management';
             var that = this;
+
             $http({
                 method: 'POST',
                 url: url,
-                withCredentials: true,
+                withCredentials: true, useXDomain : true,
                 data: data
             })
             .success(function (data) {
                 that.processSuccess(data);
                 deferred.resolve(data);
             })
-            .error(function (data, status) {
-                deferred.reject(data, status);
+            .error(function (data, status, headers, config, statusText) {
+                if (typeof data === 'string') {
+                    data = {"failure-description": data, "status": status};
+                } else if (data !== null) {
+                    data.status = status;
+                }
+                deferred.reject(data);
             });
 
             return deferred.promise;
         }
 
         function closeAlert() {
-            this.message = null;
+            this.current.message = null;
         }
 
         function address() {
@@ -237,19 +270,19 @@ angular
             return response;
         }
 
-        function processError(data, status) {
+        function processError(error, status) {
             this.current = {};
             this.current.message = '';
-            if (status >= 300) {
-                this.server.state = 'Unknown Error';
-            } else if (status > 0) {
-                this.server.state = 'Error ' + status;
-            } else if (data !== null) {
+            if (status === 0 || status === null) {
                 this.server.state = '';
-                this.current.message = data['failure-description'] || '';
+            } else if (error !== null && error['failure-description'] !== undefined && error['failure-description'] !== null) {
+                // this.server.state = 'Error';
+                this.current.message = error['failure-description'] || '';
+            } else {
+                this.server.state = 'Error ' + status;
+                this.server.stateClass = 'has-error';
             }
             this.server.processState = '';
-            this.server.stateClass = 'has-error';
         }
 
         function emptyPromise() {
@@ -262,6 +295,7 @@ angular
             processError: processError,
             processSuccess: processSuccess,
             invoke: invoke,
+            ping: ping,
             save: save,
             list: list,
             load: load,

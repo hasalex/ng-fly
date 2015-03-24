@@ -18,7 +18,8 @@ angular
         ]
     ).
 
-    config(['$routeProvider', function ($routeProvider) {
+    config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
+        $httpProvider.defaults.useXDomain = true;
         $routeProvider.otherwise({
             templateUrl: 'partials/default.html'
         });
