@@ -63,12 +63,13 @@ angular
         $scope.removeKeyspace = function(name) {
             // remove does not work
             return management
-                .invoke('drop-keyspace', [ {"subsystem": "cassandra"}, {"cluster": management.name}], {name: name})
+                .remove($scope.keyspaceAddress())
                 .then(function() {
                     $scope.keyspaceName = null;
                     $scope.keyspace = null;
                 })
-                .then(loadKeyspaces,
+                .then(
+                    loadKeyspaces,
                     function(data) {
                         management.processError(data, data.status);
                     });
@@ -81,13 +82,14 @@ angular
 
 
         $scope.createKeyspace = function() {
+            $scope.keyspaceName = $scope.keyspace.name;
             return management
-                .invoke('create-keyspace', [ {"subsystem": "cassandra"}, {"cluster": management.name}], $scope.keyspace)
-                .then(function() {
-                    $scope.keyspaceName = $scope.keyspace.name;
-                })
-                .then(loadKeyspaces)
-;
+                .create(management.name, $scope.keyspace, $scope.keyspaceAddress())
+                .then(
+                    loadKeyspaces,
+                    function(data) {
+                        management.processError(data, data.status);
+                    });
         };
 
         $scope.keyspaceAddress = function() {
