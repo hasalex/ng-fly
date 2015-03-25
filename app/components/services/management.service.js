@@ -177,7 +177,8 @@ angular
                 function () {
                     return that.load();
                 },
-                function () {
+                function (data) {
+                    that.processError(data, data.status);
                     that.name = null;
                 }
             );

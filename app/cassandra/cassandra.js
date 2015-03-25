@@ -85,11 +85,7 @@ angular
             $scope.keyspaceName = $scope.keyspace.name;
             return management
                 .create(management.name, $scope.keyspace, $scope.keyspaceAddress())
-                .then(
-                    loadKeyspaces,
-                    function(data) {
-                        management.processError(data, data.status);
-                    });
+                .then(loadKeyspaces);
         };
 
         $scope.keyspaceAddress = function() {
