@@ -14,25 +14,6 @@
     </div>
 
     <div class="form-group">
-        <label for="inputSeedProviderClassName" class="col-sm-3 control-label">seed-provider-class-name</label>
-        <div class="col-sm-9">
-            <input type="text" class="form-control" id="inputSeedProviderClassName"
-                   ng-model="management.resource['seed-provider-class-name']"
-                   ng-change="management.save('seed-provider-class-name')">
-        </div>
-    </div>
-
-
-    <div class="form-group">
-        <label for="inputSeedProviderSeeds" class="col-sm-3 control-label">seed-provider-seeds</label>
-        <div class="col-sm-9">
-            <input type="text" class="form-control" id="inputSeedProviderSeeds"
-                   ng-model="management.resource['seed-provider-seeds']" wf-expression
-                   ng-change="management.save('seed-provider-seeds')">
-        </div>
-    </div>
-
-    <div class="form-group">
         <label for="inputListenAddess" class="col-sm-3 control-label">listen-address</label>
         <div class="col-sm-9">
             <input type="text" class="form-control" id="inputListenAddess"
@@ -42,17 +23,23 @@
     </div>
 
     <div class="form-group">
-        <label for="inputBroadcastAddress" class="col-sm-3 control-label">broadcast-address</label>
-        <div class="col-sm-9">
-            <input type="text" class="form-control" id="inputBroadcastAddress"
-                   ng-model="management.resource['broadcast-address']" wf-expression
-                   ng-change="management.save('broadcast-address')">
+        <label for="rpcPort" class="col-sm-3 control-label">rpc-port</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="rpcPort"
+                   ng-model="management.resource['rpc-port']"
+                   ng-change="management.save('rpc-port')">
+        </div>
+        <label for="nativeTransportPort" class="col-sm-3 control-label">native-transport-port</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="nativeTransportPort"
+                   ng-model="management.resource['native-transport-port']"
+                   ng-change="management.save('native-transport-port')">
         </div>
     </div>
 
     <div class="form-group">
         <label for="inputStartRpc" class="col-sm-3 control-label">start-rpc</label>
-        <div class="col-sm-9">
+        <div class="col-sm-3">
             <div class="checkbox">
                 <label>
                     <input type="checkbox" id="inputStartRpc"
@@ -62,11 +49,8 @@
                 </label>
             </div>
         </div>
-    </div>
-
-    <div class="form-group">
         <label for="inputStartNativeTransport" class="col-sm-3 control-label">start-native-transport</label>
-        <div class="col-sm-9">
+        <div class="col-sm-3">
             <div class="checkbox">
                 <label>
                     <input type="checkbox" id="inputStartNativeTransport"
@@ -78,6 +62,34 @@
         </div>
     </div>
 
+    <div class="form-group">
+        <label for="commitlogDirectory" class="col-sm-3 control-label">commitlog-directory</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="commitlogDirectory"
+                   ng-model="management.resource['commitlog-directory']" wf-expression
+                   ng-change="management.save('commitlog-directory')">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="dataFileDirectories" class="col-sm-3 control-label">data-file-directories</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="dataFileDirectories"
+                   ng-model="management.resource['data-file-directories']" wf-expression
+                   ng-change="management.save('data-file-directories')">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="savedCacheDirectory" class="col-sm-3 control-label">saved-caches-directory</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="savedCacheDirectory"
+                   ng-model="management.resource['saved-caches-directory']" wf-expression
+                   ng-change="management.save('saved-caches-directory')">
+        </div>
+    </div>
+
+
     <div class="form-group" ng-show="management.name">
         <label class="col-sm-3 control-label">Keyspaces</label>
         <div class="col-sm-9 btn-group btn-group-vertical" role="group">
@@ -88,47 +100,47 @@
                 <button type="button" class="btn btn-primary btn-sm" ng-click="removeKeyspace(keyspaceName)" ng-show="keyspaceName">-</button>
             </div>
 
-    <div class="panel panel-default" ng-if="keyspace">
-        <div class="panel-body">
-            <div class="form-group">
-                <label for="keyspaceName" class="col-sm-3 control-label">Name</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="keyspaceName"
-                           ng-disabled="keyspaceName"
-                           ng-model="keyspace.name">
+            <div class="panel panel-default" ng-if="keyspace">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="keyspaceName" class="col-sm-3 control-label">Name</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="keyspaceName"
+                                   ng-disabled="keyspaceName"
+                                   ng-model="keyspace.name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="keyspaceClass" class="col-sm-3 control-label">Class</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="keyspaceClass"
+                                   ng-disabled="keyspaceName"
+                                   ng-model="keyspace.class">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="keyspaceReplicationFactor" class="col-sm-3 control-label">Replication Factor</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="keyspaceReplicationFactor"
+                                   ng-disabled="keyspaceName"
+                                   ng-model="keyspace.replication_factor">
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-show="keyspace != null && keyspaceName == null">
+                        <label class="col-sm-3 control-label"></label>
+                        <div class="col-sm-9">
+                           <button class="btn btn-primary" id="buttonCreateKeyspace"
+                                   ng-click="createKeyspace()">Create Keyspace</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="keyspaceClass" class="col-sm-3 control-label">Class</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="keyspaceClass"
-                           ng-disabled="keyspaceName"
-                           ng-model="keyspace.class">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="keyspaceReplicationFactor" class="col-sm-3 control-label">Replication Factor</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="keyspaceReplicationFactor"
-                           ng-disabled="keyspaceName"
-                           ng-model="keyspace.replication_factor">
-                </div>
-            </div>
-
-            <div class="form-group" ng-show="keyspace != null && keyspaceName == null">
-                <label class="col-sm-3 control-label"></label>
-                <div class="col-sm-9">
-                   <button class="btn btn-primary" id="buttonCreateKeyspace"
-                           ng-click="createKeyspace()">Create Keyspace</button>
-                </div>
-            </div>
         </div>
     </div>
-
-</div>
-</div>
 
     <div class="form-group">
         <div class="col-sm-3"></div>
