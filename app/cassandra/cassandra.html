@@ -1,18 +1,5 @@
 <form class="form-horizontal" role="form" ng-model-options="{ updateOn: 'blur' }">
-
-    <div class="form-group">
-        <label class="col-sm-3 control-label">Cluster</label>
-        <div class="col-sm-9">
-            <select id="inputName" class="form-control"
-                    ng-model="management.name"
-                    ng-model-options="{ updateOn: 'default' }"
-                    ng-options="key for key in management.names"
-                    ng-change="select()">
-                <option value="">-- Select a Cluster--</option>
-            </select>
-        </div>
-    </div>
-
+    <div class="loading-spiner-holder" data-loading ><div class="loading-spiner">...</div></div>
     <div class="form-group">
         <label for="inputListenAddess" class="col-sm-3 control-label">listen-address</label>
         <div class="col-sm-9">
@@ -94,10 +81,10 @@
         <label class="col-sm-3 control-label">Keyspaces</label>
         <div class="col-sm-9 btn-group btn-group-vertical" role="group">
             <button type="button" ng-repeat="keyspaceName in keyspaceNames" ng-click="selectKeyspace(keyspaceName)"
-                   class="btn btn-default" ng-class="active(keyspaceName)" >{{keyspaceName}}</button>
+                   class="btn btn-default" ng-class="active(keyspaceName)" ng-disabled="loading" >{{keyspaceName}}</button>
             <div style="margin-top: 2px">
-                <button type="button" class="btn btn-primary btn-sm" ng-click="addKeyspace()">+</button>
-                <button type="button" class="btn btn-primary btn-sm" ng-click="removeKeyspace(keyspaceName)" ng-show="keyspaceName">-</button>
+                <button type="button" class="btn btn-primary btn-sm" ng-click="addKeyspace()" ng-disabled="loading">+</button>
+                <button type="button" class="btn btn-primary btn-sm" ng-click="removeKeyspace(keyspaceName)" ng-show="keyspaceName" ng-disabled="loading">-</button>
             </div>
 
             <div class="panel panel-default" ng-if="keyspace">

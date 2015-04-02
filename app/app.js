@@ -7,6 +7,7 @@ angular
             'ngRoute',
             'ngCookies',
             'ui.bootstrap',
+            'angular-loading-bar',
             'flyNg.services',
             'flyNg.directives',
             'flyNg.ds',

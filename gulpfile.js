@@ -21,8 +21,7 @@ gulp.task('dep', function() {
     var wiredep = require('wiredep').stream;
     var options = {
         bowerJson: require('./bower.json'),
-        directory: 'app/bower_components',
-        exclude: [ /jquery/ ]
+        directory: 'app/bower_components'
     };
 
     return gulp
@@ -33,7 +32,7 @@ gulp.task('dep', function() {
 });
 
 gulp.task('serve', function() {
-    serve("app", 8888);
+    serve('app', 8888);
 });
 
 gulp.task('build-template', function() {
