@@ -47,16 +47,14 @@ angular
         function loadLoginModules() {
             $scope.loginModuleNames = null;
             if (management.name !== null) {
-                return management.list([ {"subsystem": "security"}, {"security-domain": management.name}, {"authentication": "classic"} ], 'login-module').then(
+                return management.list(classicAuthenticationAddress(), 'login-module').then(
                     function(data) {
                         $scope.loginModuleNames = data.result;
                     },
                     function(reason) {
                         $scope.loginModuleNames = null;
-                        var knownJBossError = 'JBAS014807';
-                        var knownWildflyError = 'WFLYCTL0216';
-                        if ( (reason['failure-description'].slice(0, knownJBossError.length) !== knownJBossError )
-                          && (reason['failure-description'].slice(0, knownWildflyError.length) !== knownWildflyError )) {
+                        // JBAS is here to support WF 8
+                        if ( !management.isKnownError(reason, 'JBAS014807', 'WFLYCTL0216') ) {
                             management.processError(reason);
                         }
                     }
@@ -127,10 +125,10 @@ angular
         };
 
         $scope.createLoginModule = function() {
-            management.load( [ {"subsystem": "security"}, {"security-domain": management.name}, {"authentication": "classic"} ]).then(
+            management.load( classicAuthenticationAddress()).then(
                 function() {},
                 function() {
-                    management.create(management.name, null, [ {"subsystem": "security"}, {"security-domain": management.name}, {"authentication": "classic"} ]);
+                    management.create(management.name, null, classicAuthenticationAddress());
                 }
             ).then(
                 function() {
@@ -145,12 +143,15 @@ angular
         };
 
         $scope.loginModuleAddress = function() {
-            var address = [{"subsystem": "security"},
-                {"security-domain": management.name},
-                {"authentication": "classic"},
-                {"login-module": $scope.loginModuleName}];
-            return address;
+            return classicAuthenticationAddress()
+                        .concat({"login-module": $scope.loginModuleName});;
         };
+
+        function classicAuthenticationAddress() {
+            return [{"subsystem": "security"},
+                    {"security-domain": management.name},
+                    {"authentication": "classic"}];
+        }
 
         $scope.saveModuleOptions = function() {
             var modifiedModuleOptions = {};

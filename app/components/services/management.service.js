@@ -17,6 +17,7 @@ angular
         function initPage(address, type) {
             this.rootAddress = address;
             this.resourceType = type;
+            this.closeAlert();
 
             var that = this;
             return this.list().then(
@@ -58,6 +59,7 @@ angular
 
         function load(address) {
             if (angular.isUndefined(address)) {
+                this.closeAlert();
                 if (this.name === null) {
                     this.resource = {};
                     return emptyPromise();
@@ -243,7 +245,9 @@ angular
         }
 
         function closeAlert() {
-            this.current.message = null;
+            if (this.current != null) {
+                this.current.message = null;
+            }
         }
 
         function address() {
@@ -286,6 +290,16 @@ angular
             this.server.processState = '';
         }
 
+        function isKnownError(reason, codes) {
+            var description = reason['failure-description'];
+            for(var code of codes){
+                if (description.indexOf(code) !== 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         function emptyPromise() {
             var deferred = $q.defer();
             deferred.resolve({});
@@ -294,6 +308,7 @@ angular
 
         return {
             processError: processError,
+            isKnownError: isKnownError,
             processSuccess: processSuccess,
             invoke: invoke,
             ping: ping,
