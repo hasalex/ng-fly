@@ -1,11 +1,10 @@
 NG-Fly
 ====
 
-It works with WildFly 9. CORS must be enabled on the management interface.
+It works with WildFly 9+. CORS must be enabled on the management interface.
 
 It may work with WildFly 8.2 as well, but will need the next Apache configuration. It doesn't work with previous versions because they are not dealing with errors in the some way.
 
-The support of WildFly 10 is on the way...
 
 Management Configuration
 ----
