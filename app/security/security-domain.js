@@ -45,6 +45,7 @@ angular
         }
 
         function loadLoginModules() {
+            $scope.loginModuleNames = null;
             if (management.name !== null) {
                 return management.list([ {"subsystem": "security"}, {"security-domain": management.name}, {"authentication": "classic"} ], 'login-module').then(
                     function(data) {
@@ -52,8 +53,10 @@ angular
                     },
                     function(reason) {
                         $scope.loginModuleNames = null;
-                        var knownError = 'JBAS014807';
-                        if (reason['failure-description'].slice(0, knownError.length) !== knownError ) {
+                        var knownJBossError = 'JBAS014807';
+                        var knownWildflyError = 'WFLYCTL0216';
+                        if ( (reason['failure-description'].slice(0, knownJBossError.length) !== knownJBossError )
+                          && (reason['failure-description'].slice(0, knownWildflyError.length) !== knownWildflyError )) {
                             management.processError(reason);
                         }
                     }
