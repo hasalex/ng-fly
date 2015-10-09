@@ -2,14 +2,12 @@
 
 angular
     .module('flyNg.services')
-
-    .service('modalService', ['$modal', function($modal, $scope) {
+    .service('modalService', ['$modal', function($modal) {
         var modalDefaults = {
             templateUrl: '/partials/creation-name.html',
             controller : 'ModalInstanceCtrl'
         };
-
-        this.show = function (scope, modalInstance) {
+        this.show = function () {
             return $modal.open(modalDefaults).result;
         };
     }])
