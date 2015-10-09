@@ -154,7 +154,6 @@ angular
 
         }
 
-
         function create(name, data, address) {
             this.name = name;
             $location.search('name', this.name);

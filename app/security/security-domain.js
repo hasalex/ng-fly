@@ -45,8 +45,9 @@ angular
         }
 
         function loadLoginModules() {
-            $scope.loginModuleNames = null;
-            if (management.name !== null) {
+            if (management.name === null) {
+                $scope.loginModuleNames = null;
+            } else {
                 return management.list(classicAuthenticationAddress(), 'login-module').then(
                     function(data) {
                         $scope.loginModuleNames = data.result;
@@ -125,19 +126,19 @@ angular
         };
 
         $scope.createLoginModule = function() {
-            management.load( classicAuthenticationAddress()).then(
+            management.load(classicAuthenticationAddress()).then(
                 function() {},
                 function() {
-                    management.create(management.name, null, classicAuthenticationAddress());
+                    return management.invoke('add', classicAuthenticationAddress());
                 }
             ).then(
                 function() {
                     $scope.loginModuleName = $scope.loginModule.code;
-                    management.create(management.name, $scope.loginModule, $scope.loginModuleAddress());
+                    return management.invoke('add', $scope.loginModuleAddress(), $scope.loginModule);
                 }
             ).then(
                 function() {
-                    loadLoginModules();
+                    return loadLoginModules();
                 }
             );
         };
