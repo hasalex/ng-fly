@@ -143,8 +143,8 @@ angular
                     function () {
                         return that.load();
                     },
-                    function () {
-                        that.name = null;
+                    function (data) {
+                        that.processError(data, data.status);
                     }
 
                 );
