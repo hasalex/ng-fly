@@ -89,7 +89,7 @@ angular
         $scope.addKeyspace = function() {
             $scope.keyspaceName = null;
             $scope.keyspace = {class: "org.apache.cassandra.locator.SimpleStrategy", replication_factor: 1};
-        }
+        };
 
 
         $scope.createKeyspace = function() {

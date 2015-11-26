@@ -291,7 +291,7 @@ angular
 
         function isKnownError(reason, codes) {
             var description = reason['failure-description'];
-            for(var code of codes){
+            for (var code in codes){
                 if (description.indexOf(code) !== 0) {
                     return true;
                 }

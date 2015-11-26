@@ -21,7 +21,7 @@ angular
             return management.create(result.name, management.resource);
         };
 
-        $scope.select = function () {
+        $scope.select = function() {
             return management.select()
                 .then(function () {
                     if (management.name === null) {
@@ -55,5 +55,3 @@ angular
         }
 
     }]);
-
-
